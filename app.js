@@ -15,7 +15,7 @@ Vue.createApp({
     },
     getRandomBobby: function () {
       return this.getRandomSound('bobby');
-    }
+    },
     getRandomHank: function () {
       return this.getRandomSound('hank');
     }
