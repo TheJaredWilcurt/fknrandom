@@ -1,3 +1,25 @@
+@font-face {
+  font-family: 'smash';
+  src: url('https://TheJaredWilcurt.com/melee-all-trophies-tracker/fonts/smash/smash-webfont.woff2') format('woff2'),
+       url('https://TheJaredWilcurt.com/melee-all-trophies-tracker/fonts/smash/smash-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 [v-cloak] {
-  display: none !important;
+    display: none !important;
+}
+
+body {
+    background: #222;
+}
+
+.bg-vid {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.05;
 }
