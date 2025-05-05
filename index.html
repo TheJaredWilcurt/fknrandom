@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>fknrandom dud</title>
+    <title>fkn random dud</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="_images/favicon.png">
   </head>
   <body>
     <div v-cloak id="app">
@@ -47,23 +49,47 @@
       </div>
 
       <div class="controls">
-        <label>
-          <input
-            v-model="animatedBg"
-            type="checkbox"
-          >
-          Animate background
-        </label>
+        <div>
+          <label>
+            <input
+              v-model="animatedBg"
+              type="checkbox"
+            >
+            Animate background
+          </label>
+        </div>
 
-        <label>
-          <input
-            v-model="showImages"
-            type="checkbox"
-          >
-          <span v-if="!showImages">Show</span>
-          <span v-else>Hide</span>
-          Images
-        </label>
+        <div>
+          <label>
+            <input
+              v-model="showImages"
+              type="checkbox"
+            >
+            <span v-if="!showImages">Show</span>
+            <span v-else>Hide</span>
+            Images
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Volume:
+            <input v-model="volume" type="range" min="0" max="100">
+          </label>
+        </div>
+      </div>
+
+      <div class="random" @click="rollForCharacter">
+        <div class="card">
+          <div
+            class="character"
+            :style="[
+              'background-position:',
+              'calc((var(--sprite-width) * -' + (skin - 1) + ') - ' + skin + 'px)',
+              'calc((var(--sprite-height) * -' + characterIndex + ') - ' + (characterIndex + 1) + 'px)'
+            ].join(' ')"
+          ></div>
+        </div>
       </div>
 
       <div v-if="showImages">
@@ -92,9 +118,9 @@
           :style="'width: ' + bottomRight.width + 'px'"
         >
       </div>
-
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.13"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

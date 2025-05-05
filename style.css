@@ -115,3 +115,26 @@ h2 {
     bottom: 10px;
     right: 30px;
 }
+
+
+.random {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.card {
+    background: #F004;
+    border-radius: 10px;
+    padding: 18px;
+    margin: 17px;
+}
+.character {
+    --sprite-width: 136px;
+    --sprite-height: 188px;
+    width: var(--sprite-width);
+    height: var(--sprite-height);
+    background-image: url('_images/spritesheet.png');
+    background-position: var(--sprite-width) 0px;
+    filter: drop-shadow(10px 9px 7px #000A);
+}
