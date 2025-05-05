@@ -63,6 +63,8 @@ const imageMap = Object.freeze([
 
 const APP_NAME = 'fknrandom'
 
+const OFFSET = 11.25 + (22.5 * 3);
+
 Vue.createApp({
   data: function () {
     return {
@@ -102,10 +104,12 @@ Vue.createApp({
         'marth': 5,
         'roy': 5
       },
+      spinLocation: (-1 * OFFSET),
       personSoundMap: {
         bobby: 71,
         hank: 325
-      }
+      },
+      randomCards: []
     };
   },
   methods: {
@@ -152,14 +156,37 @@ Vue.createApp({
       const skinsAmount = this.characters[this.character];
       this.skin = Math.ceil(Math.random() * skinsAmount);
     },
+    getRandomCharacters: function (amount) {
+      const front = !!((this.spinLocation + OFFSET) % 360);
+      // if facing the front half of cylinder
+      if (front) {
+        // remove the back half of the array
+        this.randomCards.splice((-1 * amount), amount);
+        for (let i = 0; i < amount; i++) {
+          this.getRandomCharacter();
+          this.randomCards.push({
+            character: this.character,
+            skin: this.skin,
+            index: this.characterIndex
+          });
+        }
+      } else {
+        // remove the front half of the array
+        this.randomCards = this.randomCards.slice(amount)
+        for (let i = 0; i < amount; i++) {
+          this.getRandomCharacter();
+          this.randomCards.unshift({
+            character: this.character,
+            skin: this.skin,
+            index: this.characterIndex
+          });
+        }
+      }
+    },
     rollForCharacter: function () {
       this.playRandomSound();
-      const length = 20;
-      for (let i = 0; i < length; i++) {
-        setTimeout(() => {
-          this.getRandomCharacter();
-        }, 20 * i);
-      }
+      this.spinLocation = this.spinLocation - 180;
+      this.getRandomCharacters(8);
     },
     initializeCorners: function () {
       const indices = this.getRandomCorners();
@@ -200,6 +227,6 @@ Vue.createApp({
   created: function () {
     this.loadSettings();
     this.initializeCorners();
-    this.rollForCharacter();
+    this.getRandomCharacters(16);
   }
 }).mount('#app');

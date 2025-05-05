@@ -32,8 +32,8 @@ body {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     pointer-events: none;
     opacity: 0.05;
@@ -97,7 +97,7 @@ h2 {
 .image-top-right,
 .image-bottom-left,
 .image-bottom-right {
-    position: absolute;
+    position: fixed;
 }
 .image-top-left {
     top: 10px;
@@ -117,17 +117,58 @@ h2 {
 }
 
 
-.random {
+.carousel {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 560px;
+    height: 260px;
+    margin: 0px auto;
+    font-size: 500%;
     cursor: pointer;
+    overflow: hidden;
+    perspective: 800px;
+}
+.deck,
+.cylinder,
+.card {
+    position: absolute;
+    transform-style: preserve-3d;
+}
+.deck {
+    top: 50%;
+    left: 50%;
+    width: 80em;
+    height: 80em;
+    margin: -40em 0em 0em -40em;
+    transform: rotateY(-11.25deg);
+    transition: 1s ease transform;
+}
+.cylinder {
+    top: 50%;
+    left: 50%;
+    width: 0em;
+    height: 0em;
+    transform-origin: 50%;
+    transform: translate3D(0em, 0em, 0em);
+    opacity: 1.0;
+    width: 6em;
+    height: 3em;
+    margin: -0.9em 0em 0em 0em;
 }
 .card {
-    background: #F004;
+    width: 1.19em;
+    height: 1.9em;
+    background: linear-gradient(#111, #4666, #111);
     border-radius: 10px;
-    padding: 18px;
-    margin: 17px;
+    box-shadow: inset 0px 0px 0px 1px #0006;
+    backface-visibility: hidden;
+    background-size: 100% 100%;
+    background-position: center;
+    perspective: 400px;
+    transform-origin: 0 0;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
 }
 .character {
     --sprite-width: 136px;
@@ -136,5 +177,27 @@ h2 {
     height: var(--sprite-height);
     background-image: url('_images/spritesheet.png');
     background-position: var(--sprite-width) 0px;
+    backface-visibility: hidden;
     filter: drop-shadow(10px 9px 7px #000A);
+    transform: translate3D(-23px, -18px, 8px) scale(0.7);
+}
+.selected-card {
+    width: 1.19em;
+    height: 1.9em;
+    border: 4px solid #5F6A;
+    border-radius: 20px;
+    transform: translate3d(0px, 5px, 270px);
+    animation:
+        throbbing-selector 3s ease-in-out infinite,
+        selector-border 10s ease-in-out infinite;
+}
+
+@keyframes throbbing-selector {
+  0%,
+  100% { transform: translate3d(0px, 5px, 260px); }
+  50%  { transform: translate3d(0px, 5px, 220px); }
+}
+@keyframes selector-border {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }

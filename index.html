@@ -64,8 +64,7 @@
             <input
               v-model="showImages"
               type="checkbox"
-            >
-            <span v-if="!showImages">Show</span>
+            >&nbsp;<span v-if="!showImages">Show</span>
             <span v-else>Hide</span>
             Images
           </label>
@@ -79,17 +78,34 @@
         </div>
       </div>
 
-      <div class="random" @click="rollForCharacter">
-        <div class="card">
-          <div
-            class="character"
-            :style="[
-              'background-position:',
-              'calc((var(--sprite-width) * -' + (skin - 1) + ') - ' + skin + 'px)',
-              'calc((var(--sprite-height) * -' + characterIndex + ') - ' + (characterIndex + 1) + 'px)'
-            ].join(' ')"
-          ></div>
+      <div class="carousel" @click="rollForCharacter">
+        <div
+          class="deck"
+          :style="'transform: rotateY(' + spinLocation + 'deg);'"
+        >
+          <div class="cylinder">
+            <div
+              v-for="(card, cardIndex) in randomCards"
+              class="card"
+              :style="[
+                'transform:',
+                'rotateY(' + ((cardIndex * 22.5) + 11.25) + 'deg)',
+                'translate3D(-50%, 0, 2.975em)'
+              ].join(' ')"
+              :key="'card-' + cardIndex"
+            >
+              <div
+                class="character"
+                :style="[
+                  'background-position:',
+                  'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + card.skin + 'px)',
+                  'calc((var(--sprite-height) * -' + card.index + ') - ' + (card.index + 1) + 'px)'
+                ].join(' ')"
+              ></div>
+            </div>
+          </div>
         </div>
+        <div class="selected-card"></div>
       </div>
 
       <div v-if="showImages">
