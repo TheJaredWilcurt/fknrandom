@@ -4,10 +4,7 @@
   "description": "Random Melee Character Select for fknsilver",
   "main": "index.html",
   "scripts": {
-    "start": "node node_modules/npm-free-server/dist/server.js"
-  },
-  "devDependencies": {
-    "npm-free-server": "^1.1.0"
+    "start": "vite"
   },
   "repository": {
     "type": "git",
@@ -18,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/TheJaredWilcurt/fknrandom/issues"
   },
-  "homepage": "https://github.com/TheJaredWilcurt/fknrandom#readme"
+  "homepage": "https://github.com/TheJaredWilcurt/fknrandom#readme",
+  "volta": {
+    "node": "23.11.0",
+    "npm": "11.3.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.4"
+  }
 }
