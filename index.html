@@ -49,33 +49,23 @@
       </div>
 
       <div class="controls">
-        <div>
-          <label>
-            <input
-              v-model="animatedBg"
-              type="checkbox"
-            >
-            Animate background
-          </label>
-        </div>
+        <base-checkbox v-model="animatedBg">
+          Animate background
+        </base-checkbox>
 
-        <div>
-          <label>
-            <input
-              v-model="showImages"
-              type="checkbox"
-            >&nbsp;<span v-if="!showImages">Show</span>
-            <span v-else>Hide</span>
-            Images
-          </label>
-        </div>
+        <base-checkbox v-model="showImages">
+          {{ showImages ? ' Hide' : ' Show' }}
+          Images
+        </base-checkbox>
 
-        <div>
-          <label>
-            Volume:
-            <input v-model="volume" type="range" min="0" max="100">
-          </label>
-        </div>
+        <label>
+          Volume:
+          <input v-model="volume" type="range" min="0" max="100">
+        </label>
+
+        <base-checkbox v-model="trueRandom">
+          True Random
+        </base-checkbox>
       </div>
 
       <div class="carousel" @click="rollForCharacter">

@@ -65,11 +65,41 @@ const APP_NAME = 'fknrandom'
 
 const OFFSET = 11.25 + (22.5 * 3);
 
+const BaseCheckbox = {
+  name: 'BaseCheckbox',
+  template: `
+    <label :for="id">
+      <input
+        :id="id"
+        type="checkbox"
+        :checked="modelValue"
+        @input="$emit('update:modelValue', $event.target.checked)"
+      >
+      <slot></slot>
+    </label>
+    `,
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    id: function () {
+      return Vue.useId();
+    }
+  }
+};
+
 Vue.createApp({
+  components: {
+    BaseCheckbox
+  },
   data: function () {
     return {
       animatedBg: true,
       showImages: true,
+      trueRandom: false,
       topLeft: null,
       topRight: null,
       bottomLeft: null,
@@ -150,11 +180,25 @@ Vue.createApp({
       return corners;
     },
     getRandomCharacter: function () {
-      const characterNames = Object.keys(this.characters);
-      const charactersAmount = characterNames.length;
-      this.character = characterNames[Math.floor(Math.random() * charactersAmount)];
+      if (this.trueRandom && Math.random() > 0.05) {
+        this.character = 'doc';
+      } else {
+        const characterNames = Object.keys(this.characters);
+        const charactersAmount = characterNames.length;
+        this.character = characterNames[Math.floor(Math.random() * charactersAmount)];
+      }
       const skinsAmount = this.characters[this.character];
       this.skin = Math.ceil(Math.random() * skinsAmount);
+      // Prevent dupes
+      const alreadyExists = this.randomCards.some((card) => {
+        return card.character === this.character;
+      });
+      if (this.trueRandom && this.character !== 'doc' && alreadyExists) {
+        this.getRandomCharacter();
+      }
+      if (!this.trueRandom && alreadyExists) {
+        this.getRandomCharacter();
+      }
     },
     getRandomCharacters: function (amount) {
       const front = !!((this.spinLocation + OFFSET) % 360);
@@ -200,6 +244,7 @@ Vue.createApp({
       if (settings) {
         this.animatedBg = settings.animatedBg;
         this.showImages = settings.showImages;
+        this.trueRandom = settings.trueRandom;
         this.volume = settings.volume;
       }
     },
@@ -215,6 +260,7 @@ Vue.createApp({
       return JSON.stringify({
         animatedBg: this.animatedBg,
         showImages: this.showImages,
+        trueRandom: this.trueRandom,
         volume: this.volume
       });
     }

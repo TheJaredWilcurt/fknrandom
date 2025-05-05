@@ -22,10 +22,18 @@ body {
     font-family: sans-serif;
 }
 
+input[type="range"] {
+    vertical-align: middle;
+}
+label {
+    display: block;
+    margin-top: 10px;
+}
+
 #app {
     position: relative;
     height: 100%;
-    z-index: 2;
+    z-index: 3;
 }
 
 .bg-vid {
@@ -98,6 +106,7 @@ h2 {
 .image-bottom-left,
 .image-bottom-right {
     position: fixed;
+    z-index: -1;
 }
 .image-top-left {
     top: 10px;
