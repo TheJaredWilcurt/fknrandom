@@ -148,6 +148,34 @@ h2 {
     left: 128px;
     z-index: 2;
 }
+.menu-item-half-circle {
+    &:before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 5px;
+        display: block;
+        width: 11px;
+        height: 20px;
+        border-radius: 20px 0px 0px 20px;
+        border-width: 4px 0px 4px 4px;
+        border-style: solid;
+        border-color: #FFF;
+        opacity: 0.5;
+    }
+    &:after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 11px;
+        display: block;
+        width: 5px;
+        height: 8px;
+        border-radius: 20px 0px 0px 20px;
+        background: #FFF;
+        opacity: 0.5;
+    }
+}
 .menu-item-label {
     position: absolute;
     top: 0px;
