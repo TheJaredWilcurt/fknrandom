@@ -132,7 +132,8 @@ Vue.createApp({
         'mewtwo': 4,
         'game-and-watch': 4,
         'marth': 5,
-        'roy': 5
+        'roy': 5,
+        'sheik': 5
       },
       spinLocation: (-1 * OFFSET),
       personSoundMap: {
