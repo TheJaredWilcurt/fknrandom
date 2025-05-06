@@ -27,7 +27,7 @@
         src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.jpg"
       >
 
-      <div class="title">
+      <div v-if="false" class="title">
         <svg
           class="melee-slant"
           xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@
         </svg>
       </div>
 
-      <div class="controls">
+      <div v-if="false" class="controls">
         <base-checkbox v-model="animatedBg">
           Animate background
         </base-checkbox>
@@ -68,7 +68,7 @@
         </base-checkbox>
       </div>
 
-      <div class="carousel" @click="rollForCharacter">
+      <div v-if="false" class="carousel" @click="rollForCharacter">
         <div
           class="deck"
           :style="'transform: rotateY(' + spinLocation + 'deg);'"
@@ -96,6 +96,36 @@
           </div>
         </div>
         <div class="selected-card"></div>
+      </div>
+
+      <div
+        style="
+          position: relative;
+          width: 650px;
+          height: 100px;
+          margin: 50px auto;
+        "
+      >
+        <div class="menu-item">
+          <span>Handicap</span>
+          <span>OFF</span>
+          <div class="menu-item-bg"></div>
+          <div class="menu-item-border"></div>
+        </div>
+        <div
+          class="mockup"
+          style="
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 650px;
+            height: 100px;
+            background-image: url('https://www.gameuidatabase.com/uploads/Super-Smash-Bros-Melee07292023-112901-88752.jpg');
+            background-position: 0px -134px;
+            background-size: 100%;
+            z-index: 1;
+          "
+        ></div>
       </div>
 
       <div v-if="showImages">
