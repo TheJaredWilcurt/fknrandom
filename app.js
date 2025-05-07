@@ -134,6 +134,10 @@ const MenuItem = {
     modelValue: {
       type: Boolean,
       default: false
+    },
+    volume: {
+      type: number,
+      default: 50
     }
   },
   data: function () {
@@ -143,6 +147,8 @@ const MenuItem = {
   },
   methods: {
     toggle: function () {
+      const sound = new Audio('_sound/click.wav');
+      sound.play(this.volume);
       this.$emit('update:modelValue', !this.modelValue);
     }
   }
