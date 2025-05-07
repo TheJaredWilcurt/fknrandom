@@ -48,27 +48,14 @@
         </svg>
       </div>
 
-      <div class="controls">
-        <base-checkbox v-model="animatedBg">
-          Animate background
-        </base-checkbox>
-
-        <base-checkbox v-model="showImages">
-          {{ showImages ? ' Hide' : ' Show' }}
-          Images
-        </base-checkbox>
-
-        <label>
-          Volume:
-          <input v-model="volume" type="range" min="0" max="100">
-        </label>
-
-        <base-checkbox v-model="trueRandom">
-          True Random
-        </base-checkbox>
-      </div>
-
-      <div class="carousel" @click="rollForCharacter">
+      <div
+        class="carousel"
+        role="button"
+        tabindex="0"
+        @click="rollForCharacter"
+        @keyup.enter="rollForCharacter"
+        @keydown.space.prevent="rollForCharacter"
+      >
         <div
           class="deck"
           :style="'transform: rotateY(' + spinLocation + 'deg);'"
@@ -98,31 +85,98 @@
         <div class="selected-card"></div>
       </div>
 
+      <div class="controls">
+        <menu-item v-model="animatedBg">
+          Animated Bg
+        </menu-item>
+
+        <menu-item v-model="showImages">
+          Images
+        </menu-item>
+
+        <menu-item v-model="trueRandom">
+          True Random
+        </menu-item>
+
+        <label class="slider">
+          <button @click="toggleMute">
+            <svg
+              v-if="volume < 2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              @click="toggleMute"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            </svg>
+            <svg
+              v-else-if="volume < 50"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              @click="toggleMute"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+            <svg
+              v-else
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              @click="toggleMute"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+          </button>
+          <input v-model.number="volume" type="range" min="0" max="100">
+        </label>
+      </div>
+
+      <a
+        class="tweetch"
+        href="https://twitch.tv/fknsilver"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </a>
+
       <div v-if="showImages">
-        <img
-          class="image-top-left"
-          :alt="topLeft.alt"
-          :src="'_images/' + topLeft.src"
-          :style="'width: ' + topLeft.width + 'px'"
-        >
-        <img
-          class="image-top-right"
-          :alt="topRight.alt"
-          :src="'_images/' + topRight.src"
-          :style="'width: ' + topRight.width + 'px'"
-        >
-        <img
-          class="image-bottom-left"
-          :alt="bottomLeft.alt"
-          :src="'_images/' + bottomLeft.src"
-          :style="'width: ' + bottomLeft.width + 'px'"
-        >
-        <img
-          class="image-bottom-right"
-          :alt="bottomRight.alt"
-          :src="'_images/' + bottomRight.src"
-          :style="'width: ' + bottomRight.width + 'px'"
-        >
+        <corner-image
+          name="top-left"
+          :corner="topLeft"
+          @click="updateSpecificCorner('top', 'left')"
+        ></corner-image>
+        <corner-image
+          name="top-right"
+          :corner="topRight"
+          @click="updateSpecificCorner('top', 'right')"
+        ></corner-image>
+        <corner-image
+          name="bottom-left"
+          :corner="bottomLeft"
+          @click="updateSpecificCorner('bottom', 'left')"
+        ></corner-image>
+        <corner-image
+          name="bottom-right"
+          :corner="bottomRight"
+          @click="updateSpecificCorner('bottom', 'right')"
+        ></corner-image>
       </div>
     </div>
 

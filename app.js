@@ -65,35 +65,93 @@ const APP_NAME = 'fknrandom'
 
 const OFFSET = 11.25 + (22.5 * 3);
 
-const BaseCheckbox = {
-  name: 'BaseCheckbox',
+const CornerImage = {
+  name: 'CornerImage',
   template: `
-    <label :for="id">
-      <input
-        :id="id"
-        type="checkbox"
-        :checked="modelValue"
-        @input="$emit('update:modelValue', $event.target.checked)"
-      >
-      <slot></slot>
-    </label>
-    `,
+    <img
+      :alt="corner.alt"
+      :class="'image-' + name"
+      role="button"
+      :src="'_images/' + corner.src"
+      :style="'width: ' + corner.width + 'px'"
+      tabindex="0"
+      @click="roll"
+      @keyup.enter="roll"
+      @keydown.space.prevent="roll"
+    >
+  `,
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    corner: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    roll: function () {
+      this.$emit('click');
+    }
+  }
+};
+
+const MenuItem = {
+  name: 'MenuItem',
+  template: `
+    <div
+      class="menu-item"
+      :class="{
+        active: hover,
+        on: modelValue
+      }"
+      role="button"
+      tabindex="0"
+      @click="toggle"
+      @keyup.enter="toggle"
+      @keydown.space.prevent="toggle"
+      @mouseover="hover = true"
+      @mouseout="hover = false"
+      @focus="hover = true"
+      @blur="hover = false"
+    >
+      <div class="menu-item-bg"></div>
+      <div class="menu-item-border"></div>
+      <div class="menu-item-settings-bg"></div>
+      <div class="menu-item-half-circle"></div>
+      <div class="menu-item-full-circle"></div>
+      <div class="menu-item-label"><slot></slot></div>
+      <div class="menu-item-switch-curtains">
+        <span class="on">ON</span>
+        <span class="off">OFF</span>
+      </div>
+      <div class="menu-item-previous"></div>
+      <div class="menu-item-next"></div>
+    </div>
+  `,
   props: {
     modelValue: {
       type: Boolean,
       default: false
     }
   },
-  computed: {
-    id: function () {
-      return Vue.useId();
+  data: function () {
+    return {
+      hover: false
+    };
+  },
+  methods: {
+    toggle: function () {
+      this.$emit('update:modelValue', !this.modelValue);
     }
   }
 };
 
 Vue.createApp({
   components: {
-    BaseCheckbox
+    CornerImage,
+    MenuItem
   },
   data: function () {
     return {
@@ -107,6 +165,7 @@ Vue.createApp({
       character: 'doc',
       skin: 1,
       volume: 100,
+      previousVolume: 100,
       characters: {
         'doc': 5,
         'mario': 5,
@@ -144,6 +203,20 @@ Vue.createApp({
     };
   },
   methods: {
+    toggleMute: function () {
+      if (
+        this.volume === 0 &&
+        this.previousVolume === 0
+      ) {
+        this.volume = 100;
+        this.previousVolume = 100;
+      } else if (this.volume === 0) {
+        this.volume = this.previousVolume;
+      } else {
+        this.previousVolume = this.volume;
+        this.volume = 0;
+      }
+    },
     getRandomSound: function (person) {
       const max = this.personSoundMap[person];
       const random = Math.ceil(Math.random() * max);
@@ -179,6 +252,32 @@ Vue.createApp({
         corners = Array.from(new Set(corners));
       }
       return corners;
+    },
+    updateSpecificCorner: function (up, side) {
+      const srcs = [
+        this.topLeft.src,
+        this.topRight.src,
+        this.bottomLeft.src,
+        this.bottomRight.src
+      ];
+      let newCorner = imageMap[this.getRandomCorner()];
+      if (srcs.includes(newCorner.src)) {
+        this.updateSpecificCorner(up, side);
+      } else {
+        if (up === 'top') {
+          if (side === 'left') {
+            this.topLeft = newCorner;
+          } else {
+            this.topRight = newCorner;
+          }
+        } else {
+          if (side === 'left') {
+            this.bottomLeft = newCorner;
+          } else {
+            this.bottomRight = newCorner;
+          }
+        }
+      }
     },
     getRandomCharacter: function () {
       if (this.trueRandom && Math.random() > 0.05) {
