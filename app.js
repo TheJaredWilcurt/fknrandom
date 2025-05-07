@@ -65,6 +65,38 @@ const APP_NAME = 'fknrandom'
 
 const OFFSET = 11.25 + (22.5 * 3);
 
+const CornerImage = {
+  name: 'CornerImage',
+  template: `
+    <img
+      :alt="corner.alt"
+      :class="'image-' + name"
+      role="button"
+      :src="'_images/' + corner.src"
+      :style="'width: ' + corner.width + 'px'"
+      tabindex="0"
+      @click="roll"
+      @keyup.enter="roll"
+      @keydown.space.prevent="roll"
+    >
+  `,
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    corner: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    roll: function () {
+      this.$emit('click');
+    }
+  }
+};
+
 const MenuItem = {
   name: 'MenuItem',
   template: `
@@ -116,6 +148,7 @@ const MenuItem = {
 
 Vue.createApp({
   components: {
+    CornerImage,
     MenuItem
   },
   data: function () {
@@ -217,6 +250,32 @@ Vue.createApp({
         corners = Array.from(new Set(corners));
       }
       return corners;
+    },
+    updateSpecificCorner: function (up, side) {
+      const srcs = [
+        this.topLeft.src,
+        this.topRight.src,
+        this.bottomLeft.src,
+        this.bottomRight.src
+      ];
+      let newCorner = imageMap[this.getRandomCorner()];
+      if (srcs.includes(newCorner.src)) {
+        this.updateSpecificCorner(up, side);
+      } else {
+        if (up === 'top') {
+          if (side === 'left') {
+            this.topLeft = newCorner;
+          } else {
+            this.topRight = newCorner;
+          }
+        } else {
+          if (side === 'left') {
+            this.bottomLeft = newCorner;
+          } else {
+            this.bottomRight = newCorner;
+          }
+        }
+      }
     },
     getRandomCharacter: function () {
       if (this.trueRandom && Math.random() > 0.05) {

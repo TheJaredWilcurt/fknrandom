@@ -137,6 +137,17 @@ h2 {
     -webkit-text-fill-color: #FFF;
 }
 
+.tweetch {
+    display: block;
+    margin: 20px auto 5px;
+}
+.tweetch,
+.tweetch svg {
+    width: 38px;
+    height: 38px;
+    fill: #6441A5;
+}
+
 .controls {
     display: flex;
     flex-direction: column;
@@ -146,6 +157,9 @@ h2 {
 }
 
 .slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 20px;
     button {
         background: transparent;
@@ -156,6 +170,41 @@ h2 {
         &:focus-visible {
             outline: 1px solid #FFF;
         }
+    }
+    svg {
+        width: 24px;
+        height: 24px;
+        stroke: #8C7021;
+    }
+    svg:hover {
+        stroke: #EDC53F;
+    }
+    input {
+        appearance: none;
+        width: 200px;
+        height: 10px;
+        background: #000;
+        border-width: 2px 4px;
+        border-style: solid;
+        border-color: #FFF9;
+        transform: skewX(-29deg);
+    }
+    input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 8px;
+        height: 20px;
+        background: #FFF;
+        border: 0px;
+        cursor: pointer;
+    }
+    input::-moz-range-thumb {
+        width: 8px;
+        height: 20px;
+        background: #FFF;
+        cursor: pointer;
+        border: 0px;
+        border-radius: 0px;
     }
 }
 
