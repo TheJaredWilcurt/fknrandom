@@ -325,6 +325,25 @@ h2 {
         transform: rotate(90deg);
     }
 }
+.menu-item-previous,
+.menu-item-next {
+    position: absolute;
+    display: none;
+    border-width: 7px;
+    border-style: solid;
+    transform: scaleX(55%);
+    z-index: 5;
+}
+.menu-item-previous {
+    top: 6px;
+    left: 196px;
+    border-color: transparent #F8E50C transparent transparent;
+}
+.menu-item-next {
+    top: 10px;
+    left: 341px;
+    border-color: transparent transparent transparent #F8E50C;
+}
 .menu-item .on,
 .menu-item .off {
     position: absolute;
@@ -421,6 +440,12 @@ h2 {
             border-color: #EDC53F;
         }
     }
+}
+.menu-item.active.on .menu-item-next {
+    display: block;
+}
+.menu-item.active:not(.on) .menu-item-previous {
+    display: block;
 }
 .menu-item:focus {
     outline: none;

@@ -126,6 +126,8 @@ const MenuItem = {
         <span class="on">ON</span>
         <span class="off">OFF</span>
       </div>
+      <div class="menu-item-previous"></div>
+      <div class="menu-item-next"></div>
     </div>
   `,
   props: {
