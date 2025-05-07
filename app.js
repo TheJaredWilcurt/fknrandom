@@ -65,35 +65,58 @@ const APP_NAME = 'fknrandom'
 
 const OFFSET = 11.25 + (22.5 * 3);
 
-const BaseCheckbox = {
-  name: 'BaseCheckbox',
+const MenuItem = {
+  name: 'MenuItem',
   template: `
-    <label :for="id">
-      <input
-        :id="id"
-        type="checkbox"
-        :checked="modelValue"
-        @input="$emit('update:modelValue', $event.target.checked)"
-      >
-      <slot></slot>
-    </label>
-    `,
+    <div
+      class="menu-item"
+      :class="{
+        active: hover,
+        on: modelValue
+      }"
+      role="button"
+      tabindex="0"
+      @click="toggle"
+      @keyup.enter="toggle"
+      @keydown.space.prevent="toggle"
+      @mouseover="hover = true"
+      @mouseout="hover = false"
+      @focus="hover = true"
+      @blur="hover = false"
+    >
+      <div class="menu-item-bg"></div>
+      <div class="menu-item-border"></div>
+      <div class="menu-item-settings-bg"></div>
+      <div class="menu-item-half-circle"></div>
+      <div class="menu-item-full-circle"></div>
+      <div class="menu-item-label"><slot></slot></div>
+      <div class="menu-item-switch-curtains">
+        <span class="on">ON</span>
+        <span class="off">OFF</span>
+      </div>
+    </div>
+  `,
   props: {
     modelValue: {
       type: Boolean,
       default: false
     }
   },
-  computed: {
-    id: function () {
-      return Vue.useId();
+  data: function () {
+    return {
+      hover: false
+    };
+  },
+  methods: {
+    toggle: function () {
+      this.$emit('update:modelValue', !this.modelValue);
     }
   }
 };
 
 Vue.createApp({
   components: {
-    BaseCheckbox
+    MenuItem
   },
   data: function () {
     return {
@@ -107,6 +130,7 @@ Vue.createApp({
       character: 'doc',
       skin: 1,
       volume: 100,
+      previousVolume: 100,
       characters: {
         'doc': 5,
         'mario': 5,
@@ -144,6 +168,20 @@ Vue.createApp({
     };
   },
   methods: {
+    toggleMute: function () {
+      if (
+        this.volume === 0 &&
+        this.previousVolume === 0
+      ) {
+        this.volume = 100;
+        this.previousVolume = 100;
+      } else if (this.volume === 0) {
+        this.volume = this.previousVolume;
+      } else {
+        this.previousVolume = this.volume;
+        this.volume = 0;
+      }
+    },
     getRandomSound: function (person) {
       const max = this.personSoundMap[person];
       const random = Math.ceil(Math.random() * max);

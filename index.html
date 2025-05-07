@@ -27,7 +27,7 @@
         src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.jpg"
       >
 
-      <div v-if="false" class="title">
+      <div class="title">
         <svg
           class="melee-slant"
           xmlns="http://www.w3.org/2000/svg"
@@ -48,27 +48,14 @@
         </svg>
       </div>
 
-      <div v-if="false" class="controls">
-        <base-checkbox v-model="animatedBg">
-          Animate background
-        </base-checkbox>
-
-        <base-checkbox v-model="showImages">
-          {{ showImages ? ' Hide' : ' Show' }}
-          Images
-        </base-checkbox>
-
-        <label>
-          Volume:
-          <input v-model="volume" type="range" min="0" max="100">
-        </label>
-
-        <base-checkbox v-model="trueRandom">
-          True Random
-        </base-checkbox>
-      </div>
-
-      <div v-if="false" class="carousel" @click="rollForCharacter">
+      <div
+        class="carousel"
+        role="button"
+        tabindex="0"
+        @click="rollForCharacter"
+        @keyup.enter="rollForCharacter"
+        @keydown.space.prevent="rollForCharacter"
+      >
         <div
           class="deck"
           :style="'transform: rotateY(' + spinLocation + 'deg);'"
@@ -98,37 +85,34 @@
         <div class="selected-card"></div>
       </div>
 
-      <div
-        style="
-          position: relative;
-          width: 650px;
-          height: 100px;
-          margin: 50px auto;
-        "
-      >
-        <div class="menu-item">
-          <div class="menu-item-bg"></div>
-          <div class="menu-item-border"></div>
-          <div class="menu-item-settings-bg"></div>
-          <div class="menu-item-half-circle"></div>
-          <div class="menu-item-label">Handicap</div>
-          <span class="on">ON</span>
-          <span class="off">OFF</span>
-        </div>
-        <div
-          class="mockup"
-          style="
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 650px;
-            height: 100px;
-            background-image: url('https://www.gameuidatabase.com/uploads/Super-Smash-Bros-Melee07292023-112901-88752.jpg');
-            background-position: 0px -134px;
-            background-size: 100%;
-            z-index: 1;
-          "
-        ></div>
+      <div class="controls">
+        <menu-item v-model="animatedBg">
+          Animate Bg
+        </menu-item>
+
+        <menu-item v-model="showImages">
+          {{ showImages ? ' Hide' : ' Show' }}
+          Images
+        </menu-item>
+
+        <menu-item v-model="trueRandom">
+          True Random
+        </menu-item>
+
+        <label class="slider">
+          <button @click="toggleMute">
+            <template v-if="volume < 2">
+              &#x1F508;
+            </template>
+            <template v-else-if="volume < 50">
+              &#x1F509;
+            </template>
+            <template v-else>
+              &#x1F50A;
+            </template>
+          </button>
+          <input v-model.number="volume" type="range" min="0" max="100">
+        </label>
       </div>
 
       <div v-if="showImages">
