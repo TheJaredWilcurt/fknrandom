@@ -148,6 +148,7 @@ const MenuItem = {
   methods: {
     toggle: function () {
       const sound = new Audio('_sound/click.wav');
+      sound.volume = this.volume / 100;
       sound.play(this.volume);
       this.$emit('update:modelValue', !this.modelValue);
     }
