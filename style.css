@@ -147,6 +147,9 @@ h2 {
     height: 38px;
     fill: #6441A5;
 }
+.tweetch svg:hover {
+    filler: #906CD3;
+}
 
 .controls {
     display: flex;
@@ -349,7 +352,7 @@ h2 {
     top: 0px;
     font-size: 26px;
     transform: scale(114%, 100%);
-    transition: 1s ease left;
+    transition: 0.5s ease left;
 }
 .menu-item .on { left: -14px; }
 .menu-item .off { left: 50px; }
