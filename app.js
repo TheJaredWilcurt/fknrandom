@@ -136,7 +136,7 @@ const MenuItem = {
       default: false
     },
     volume: {
-      type: number,
+      type: Number,
       default: 50
     }
   },
