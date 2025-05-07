@@ -10,7 +10,7 @@
   <body>
     <div v-cloak id="app">
       <video
-        v-if="animatedBg"
+        v-if="background === 'animated'"
         autoplay
         class="bg-vid"
         loop
@@ -22,11 +22,19 @@
         >
       </video>
       <img
-        v-else
+        v-else-if="background === 'still'"
         alt="background image"
         class="bg-vid"
         src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.jpg"
       >
+      <div
+        v-else-if="background === 'blue'"
+        class="bg-blue"
+      ></div>
+      <div
+        v-else-if="background === 'green'"
+        class="bg-green"
+      ></div>
 
       <div class="title">
         <svg
@@ -86,10 +94,22 @@
         <div class="selected-card"></div>
       </div>
 
-      <div class="controls">
-        <menu-item v-model="animatedBg" :volume="volume">
-          Animated Bg
-        </menu-item>
+      <div
+        class="controls"
+        :class="{ 'green-screen': ['blue', 'green'].includes(background) }"
+      >
+        <menu-items
+          v-model="background"
+          :volume="volume"
+          :options="[
+            'animated',
+            'still',
+            'blue',
+            'green'
+          ]"
+        >
+          Background
+        </menu-items>
 
         <menu-item v-model="showImages" :volume="volume">
           Images
