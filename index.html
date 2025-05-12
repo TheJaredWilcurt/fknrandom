@@ -115,9 +115,31 @@
           Images
         </menu-item>
 
-        <menu-item v-model="trueRandom" :volume="volume">
-          True Random
-        </menu-item>
+        <menu-items
+          v-model="randomness"
+          :volume="volume"
+          :options="[
+            NORMAL,
+            IRONMAN,
+            LAWLESS,
+            CLASSIC
+          ]"
+        >
+          Randomness
+        </menu-items>
+        <p v-if="randomness === NORMAL">
+          Fully random, but you cannot get the same character twice in a row.
+        </p>
+        <p v-if="randomness === IRONMAN">
+          After a character is shown, they are removed from the deck until all characters have gone.
+        </p>
+        <p v-if="randomness === LAWLESS">
+          No rules, purely random, may have duplicates or pick the same character multiple times in a row.
+        </p>
+        <p v-if="randomness === CLASSIC">
+          The old random character website had a proclivity of picking Doc more than anyone else, this setting is for
+          those that prefer the classic randomizer algorithm.
+        </p>
 
         <label class="slider">
           <button @click="toggleMute">

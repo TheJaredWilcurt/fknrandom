@@ -61,7 +61,11 @@ const imageMap = Object.freeze([
   }
 ]);
 
-const APP_NAME = 'fknrandom'
+const APP_NAME = 'fknrandom';
+const NORMAL = 'normal';
+const CLASSIC = 'classic';
+const LAWLESS = 'lawless';
+const IRONMAN = 'ironman';
 
 const OFFSET = 11.25 + (22.5 * 3);
 
@@ -155,7 +159,6 @@ const MenuItem = {
   }
 };
 
-
 const MenuItems = {
   name: 'MenuItems',
   template: `
@@ -230,7 +233,7 @@ Vue.createApp({
     return {
       background: 'animated',
       showImages: true,
-      trueRandom: false,
+      randomness: 'no back-to-back',
       topLeft: null,
       topRight: null,
       bottomLeft: null,
@@ -353,7 +356,7 @@ Vue.createApp({
       }
     },
     getRandomCharacter: function () {
-      if (this.trueRandom && Math.random() > 0.05) {
+      if (this.randomness === CLASSIC && Math.random() > 0.05) {
         this.character = 'doc';
       } else {
         const characterNames = Object.keys(this.characters);
@@ -366,10 +369,10 @@ Vue.createApp({
       const alreadyExists = this.randomCards.some((card) => {
         return card.character === this.character;
       });
-      if (this.trueRandom && this.character !== 'doc' && alreadyExists) {
+      if (this.randomness === CLASSIC && this.character !== 'doc' && alreadyExists) {
         this.getRandomCharacter();
       }
-      if (!this.trueRandom && alreadyExists) {
+      if (!this.randomness === CLASSIC && alreadyExists) {
         this.getRandomCharacter();
       }
     },
@@ -417,7 +420,7 @@ Vue.createApp({
       if (settings) {
         this.background = settings.background;
         this.showImages = settings.showImages;
-        this.trueRandom = settings.trueRandom;
+        this.randomness = settings.randomness;
         this.volume = settings.volume;
       }
     },
@@ -426,6 +429,18 @@ Vue.createApp({
     }
   },
   computed: {
+    NORMAL: function () {
+      return NORMAL;
+    },
+    CLASSIC: function () {
+      return CLASSIC;
+    },
+    LAWLESS: function () {
+      return LAWLESS;
+    },
+    IRONMAN: function () {
+      return IRONMAN;
+    },
     characterIndex: function () {
       return Object.keys(this.characters).indexOf(this.character);
     },
@@ -433,7 +448,7 @@ Vue.createApp({
       return JSON.stringify({
         background: this.background,
         showImages: this.showImages,
-        trueRandom: this.trueRandom,
+        randomness: this.randomness,
         volume: this.volume
       });
     }
