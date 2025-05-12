@@ -89,16 +89,21 @@ label {
     z-index: 1;
 }
 .bg-blue,
-.bg-green {
+.bg-green,
+.bg-black {
     position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;
     height: 100%;
+    opacity: 1.0;
+    transition: 5s ease opacity;
     z-index: -1;
 }
 .bg-blue { background: #00F; }
 .bg-green { background: #0F0; }
+.bg-black { background: #000; }
+.hide { opacity: 0.0 }
 
 h1,
 h2 {
@@ -492,6 +497,24 @@ h2 {
 }
 .green-screen .menu-item-bg:after {
     border-color: #333 #333 transparent transparent;
+}
+
+
+.explainer {
+    border-width: 4px 2px;
+    border-style: solid;
+    border-color: #8F929C;
+    border-radius: 8px;
+    margin: 20px 0px 0px 0px;
+    padding: 6px 9px;
+    color: #8F929C;
+    font-family: Univers, sans-serif;
+    font-weight: 700;
+    text-align: justify;
+}
+.explainer p {
+    margin: 0px;
+    padding: 0px;
 }
 
 
