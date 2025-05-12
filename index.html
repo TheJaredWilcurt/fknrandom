@@ -28,12 +28,16 @@
         src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.jpg"
       >
       <div
-        v-else-if="background === 'blue'"
         class="bg-blue"
+        :class="{ hide: background !== 'blue' }"
       ></div>
       <div
-        v-else-if="background === 'green'"
         class="bg-green"
+        :class="{ hide: background !== 'green' }"
+      ></div>
+      <div
+        class="bg-black"
+        :class="{ hide: background !== 'black' }"
       ></div>
 
       <div class="title">
@@ -105,7 +109,8 @@
             'animated',
             'still',
             'blue',
-            'green'
+            'green',
+            'black'
           ]"
         >
           Background
@@ -127,19 +132,21 @@
         >
           Randomness
         </menu-items>
-        <p v-if="randomness === NORMAL">
-          Fully random, but you cannot get the same character twice in a row.
-        </p>
-        <p v-if="randomness === IRONMAN">
-          After a character is shown, they are removed from the deck until all characters have gone.
-        </p>
-        <p v-if="randomness === LAWLESS">
-          No rules, purely random, may have duplicates or pick the same character multiple times in a row.
-        </p>
-        <p v-if="randomness === CLASSIC">
-          The old random character website had a proclivity of picking Doc more than anyone else, this setting is for
-          those that prefer the classic randomizer algorithm.
-        </p>
+        <div class="explainer">
+          <p v-if="randomness === NORMAL">
+            Fully random, but you cannot get the same character twice in a row.
+          </p>
+          <p v-if="randomness === IRONMAN">
+            After a character is shown, they are removed from the deck until all characters have gone.
+          </p>
+          <p v-if="randomness === LAWLESS">
+            No rules, purely random, may have duplicates or pick the same character multiple times in a row.
+          </p>
+          <p v-if="randomness === CLASSIC">
+            The old website had a proclivity of picking Doc like 90% of the time. This setting is for
+            those that want some nostalgia.
+          </p>
+        </div>
 
         <label class="slider">
           <button @click="toggleMute">
