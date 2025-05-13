@@ -228,6 +228,25 @@ h2 {
     border-radius: 0px;
 }
 
+.ironman {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Univers, sans-serif;
+    font-weight: 700;
+    text-align: center;
+}
+.mini-card {
+    --sprite-width: 46px;
+    --sprite-height: 63px;
+    width: var(--sprite-width);
+    height: calc(var(--sprite-height) - 2px);
+    background-image: url('_images/spritesheet.png');
+    background-position: var(--sprite-width) 0px;
+    background-size: auto calc(26 * var(--sprite-height));
+    filter: drop-shadow(10px 9px 7px #000A);
+}
+
 .menu-item {
     position: relative;
     display: block;

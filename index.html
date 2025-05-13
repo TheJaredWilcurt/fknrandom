@@ -97,6 +97,25 @@
         </div>
         <div class="selected-card"></div>
       </div>
+      <div
+        v-if="randomness === IRONMAN"
+        class="ironman"
+      >
+        <div
+          v-for="card in usedIronmanCharacters"
+          class="mini-card"
+          :style="[
+            'background-position:',
+            'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - 0px)',
+            'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
+          ].join(' ')"
+        ></div>
+        <!--
+            'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + card.skin + 'px)',
+            'calc((var(--sprite-height) * -' + card.index + ') - ' + (card.index + 1) + 'px)'
+        -->
+        RESET
+      </div>
 
       <div
         class="controls"
