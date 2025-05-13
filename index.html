@@ -69,11 +69,17 @@
       </div>
 
       <div
+        v-if="randomness === IRONMAN"
         class="carousel-reset"
         :class="{
           'fade-in': !unusedIronmanCharacters.length,
           'fade-out': unusedIronmanCharacters.length
         }"
+        role="button"
+        tabindex="0"
+        @click="rollForCharacter"
+        @keyup.enter="rollForCharacter"
+        @keydown.space.prevent="rollForCharacter"
       >
         <div class="text-overlap">
           <h1 class="title-text-stroke">RESET?</h1>
@@ -84,7 +90,7 @@
         class="carousel"
         :class="{
           'fade-in': !fadeOut,
-          'fade-out': fadeOut || !unusedIronmanCharacters.length,
+          'fade-out': fadeOut || (!unusedIronmanCharacters.length && randomness === IRONMAN),
           'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
         }"
         role="button"
@@ -127,8 +133,10 @@
       >
         <transition-group name="fade">
           <div
-            v-for="card in usedIronmanCharacters"
+            v-for="(card, cardIndex) in usedIronmanCharacters"
+            :key="'card' + cardIndex"
             class="mini-card"
+            :class="{ 'green-screen': ['blue', 'green'].includes(background) }"
           >
             <div
               class="mini-character"

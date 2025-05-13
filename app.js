@@ -422,6 +422,9 @@ Vue.createApp({
         [CLASSIC]: this.getClassicRandomCharacter,
         [IRONMAN]: this.getIronmanRandomCharacter
       };
+      if (!this.unusedIronmanCharacters.length) {
+        randomnessFunctionMap[IRONMAN] = this.getNormalRandomCharacter;
+      }
       randomnessFunctionMap[this.randomness]();
     },
     getRandomCharacters: function (amount) {
@@ -467,6 +470,11 @@ Vue.createApp({
     markIronmanCharacterAsUsed: function () {
       if (this.randomness === IRONMAN) {
         this.usedIronmanCharacters.push(this.currentCard);
+        if (!this.unusedIronmanCharacters.length) {
+          setTimeout(() => {
+            this.getRandomCharacters(16);
+          }, 3000);
+        }
       }
     },
     initializeCorners: function () {
@@ -494,7 +502,6 @@ Vue.createApp({
     },
     loadSettings: function () {
       const settings = JSON.parse(localStorage.getItem(APP_NAME));
-      console.log(settings);
       if (settings) {
         this.background = settings.background;
         this.fadeWhenIdle = settings.fadeWhenIdle;
@@ -505,7 +512,6 @@ Vue.createApp({
       }
     },
     saveSettings: function () {
-      console.log(this.dataToSave);
       localStorage.setItem(APP_NAME, this.dataToSave);
     }
   },

@@ -256,6 +256,7 @@ h2 {
     text-align: center;
 }
 .mini-card {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -267,6 +268,10 @@ h2 {
     border-radius: 10px;
     margin: 3px 4px;
     box-shadow: inset 0px 0px 0px 1px #0006;
+    transition: 1s ease all;
+}
+.green-screen.mini-card {
+    background: linear-gradient(#111, #414E57, #111);
 }
 .mini-character {
     --sprite-width: 44px;
@@ -672,7 +677,28 @@ h2 {
 .green-screen .card {
     background: linear-gradient(#111, #414E57, #111);
 }
+.carousel-reset {
+    --reset-width: 460px;
+    position: absolute;
+    top: 190px;
+    left: calc(50% - (var(--reset-width) / 2));
+    width: var(--reset-width);
+    margin: 0px;
+    cursor: pointer;
+    z-index: 6;
+}
+.carousel-reset:focus {
+    outline: none;
+}
+.carousel-reset:hover .title-text-color,
+.carousel-reset:focus .title-text-color {
+    background-image: linear-gradient(0deg, #F00, #F00, #000, #000);
+}
+.carousel-reset h1 {
+    margin: 0px;
+}
 .carousel-reset .text-overlap {
+    height: 120px;
     font-size: 56px;
 }
 
@@ -693,4 +719,17 @@ h2 {
   0%,
   100% { opacity: 1.0 }
   50%  { opacity: 0.9 }
+}
+
+.fade-enter-active,
+.fade-leave-active,
+.fade-enter-from,
+.fade-leave-to {
+    transform: translateY(0px);
+    transition: 4s ease-in opacity, 2s ease transform;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0.0;
+    transform: translateY(10px);
 }
