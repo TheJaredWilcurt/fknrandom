@@ -69,10 +69,28 @@
       </div>
 
       <div
+        v-if="randomness === IRONMAN"
+        class="carousel-reset"
+        :class="{
+          'fade-in': !unusedIronmanCharacters.length,
+          'fade-out': unusedIronmanCharacters.length
+        }"
+        role="button"
+        tabindex="0"
+        @click="rollForCharacter"
+        @keyup.enter="rollForCharacter"
+        @keydown.space.prevent="rollForCharacter"
+      >
+        <div class="text-overlap">
+          <h1 class="title-text-stroke">RESET?</h1>
+          <h1 class="title-text-color">RESET?</h1>
+        </div>
+      </div>
+      <div
         class="carousel"
         :class="{
           'fade-in': !fadeOut,
-          'fade-out': fadeOut,
+          'fade-out': fadeOut || (!unusedIronmanCharacters.length && randomness === IRONMAN),
           'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
         }"
         role="button"
@@ -109,6 +127,28 @@
         </div>
         <div class="selected-card"></div>
       </div>
+      <div
+        v-if="randomness === IRONMAN"
+        class="ironman"
+      >
+        <transition-group name="fade">
+          <div
+            v-for="(card, cardIndex) in usedIronmanCharacters"
+            :key="'card' + cardIndex"
+            class="mini-card"
+            :class="{ 'green-screen': ['blue', 'green'].includes(background) }"
+          >
+            <div
+              class="mini-character"
+              :style="[
+                'background-position:',
+                'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + ((card.skin * SPRITE_RATIO) * (3 * SPRITE_RATIO)) + 'px)',
+                'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
+              ].join(' ')"
+            ></div>
+          </div>
+        </transition-group>
+      </div>
 
       <div
         class="controls"
@@ -118,6 +158,38 @@
           'green-screen': ['blue', 'green'].includes(background)
         }"
       >
+        <menu-items
+          v-model="randomness"
+          :volume="volume"
+          :options="[
+            NORMAL,
+            IRONMAN,
+            LAWLESS,
+            CLASSIC
+          ]"
+          @mouseover="showRandomnessExplainer = true"
+          @mouseout="showRandomnessExplainer = false"
+        >
+          Randomness
+        </menu-items>
+        <base-accordion :show="showRandomnessExplainer">
+          <div class="explainer">
+            <p v-if="randomness === NORMAL">
+              Fully random, but you cannot get the same character twice in a row.
+            </p>
+            <p v-if="randomness === IRONMAN">
+              After a character is shown, they are removed from the deck until one character remains.
+            </p>
+            <p v-if="randomness === LAWLESS">
+              No rules, purely random, may have duplicates or pick the same character multiple times in a row.
+            </p>
+            <p v-if="randomness === CLASSIC" class="justify">
+              The old website had a proclivity of picking Doc like 90% of the time. This setting is for
+              those that want <em>some nostalgia</em>.
+            </p>
+          </div>
+        </base-accordion>
+
         <menu-items
           v-model="background"
           :volume="volume"
@@ -137,14 +209,22 @@
           Images
         </menu-item>
 
-        <menu-item v-model="trueRandom" :volume="volume">
-          True Random
-        </menu-item>
-
-        <menu-item v-model="fadeWhenIdle" :volume="volume">
+        <menu-item
+          v-model="fadeWhenIdle"
+          :volume="volume"
+          @mouseover="showIdleExplainer = true"
+          @mouseout="showIdleExplainer = false"
+        >
           Fade when idle
         </menu-item>
-
+        <base-accordion :show="showIdleExplainer">
+          <div class="explainer">
+            <p class="justify">
+              Fades out the UI if the mouse hasn't moved in the last 5 seconds.
+              Prevents OBS overlays from covering gameplay.
+            </p>
+          </div>
+        </base-accordion>
 
         <label class="slider">
           <button @click="toggleMute">
@@ -190,7 +270,11 @@
 
       <a
         class="tweetch"
-        :class="fadeOut ? 'fade-out' : 'fade-in'"
+        :class="{
+          'fade-out': fadeOut,
+          'fade-in': !fadeOut,
+          'purple-screen': background === 'purple'
+        }"
         href="https://twitch.tv/fknsilver"
         title="twitch.tv/fknsilver"
       >

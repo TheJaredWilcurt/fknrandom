@@ -61,9 +61,59 @@ const imageMap = Object.freeze([
   }
 ]);
 
-const APP_NAME = 'fknrandom'
+const APP_NAME = 'fknrandom';
+const NORMAL = 'normal';
+const CLASSIC = 'classic';
+const LAWLESS = 'lawless';
+const IRONMAN = 'ironman';
+
+const SPRITE_WIDTH = 136;
+const SPRITE_HEIGHT = 188;
+const SPRITE_RATIO = SPRITE_WIDTH / SPRITE_HEIGHT;
 
 const OFFSET = 11.25 + (22.5 * 3);
+
+const BaseAccordion = {
+  template: `
+    <div :style="accordionContainer">
+      <div :style="accordionInner">
+        <slot></slot>
+      </div>
+    </div>
+  `,
+  name: 'BaseAccordion',
+  props: {
+    show: {
+      type: Boolean,
+      default: true
+    },
+    speedMs: {
+      type: Number,
+      default: 750
+    }
+  },
+  computed: {
+    accordionContainer: function () {
+      let frames = '1';
+      if (!this.show) {
+        frames = '0';
+      }
+      return [
+        'display: grid',
+        'grid-template-rows: ' + frames + 'fr',
+        'margin-bottom: ' + (-10 * frames) + 'px',
+        'transition: ' + this.speedMs + 'ms ease all'
+      ].join(';');
+    },
+    accordionInner: function () {
+      return [
+        'grid-row: 1 / span 2',
+        'padding-bottom: 10px',
+        'overflow: hidden'
+      ].join(';');
+    }
+  }
+};
 
 const CornerImage = {
   name: 'CornerImage',
@@ -155,7 +205,6 @@ const MenuItem = {
   }
 };
 
-
 const MenuItems = {
   name: 'MenuItems',
   template: `
@@ -222,20 +271,24 @@ const MenuItems = {
 
 Vue.createApp({
   components: {
+    BaseAccordion,
     CornerImage,
     MenuItem,
     MenuItems
   },
   data: function () {
     return {
+      SPRITE_RATIO,
+      showRandomnessExplainer: false,
+      showIdleExplainer: false,
       background: 'animated',
       showImages: true,
-      trueRandom: false,
+      randomness: NORMAL,
       topLeft: null,
       topRight: null,
       bottomLeft: null,
       bottomRight: null,
-      fadeWhenIdle: true,
+      fadeWhenIdle: false,
       fadeOut: false,
       lastMovement: new Date(),
       character: 'doc',
@@ -270,6 +323,7 @@ Vue.createApp({
         'roy': 5,
         'sheik': 5
       },
+      usedIronmanCharacters: [],
       spinLocation: (-1 * OFFSET),
       personSoundMap: {
         bobby: 71,
@@ -355,8 +409,32 @@ Vue.createApp({
         }
       }
     },
-    getRandomCharacter: function () {
-      if (this.trueRandom && Math.random() > 0.05) {
+    getNormalRandomCharacter: function () {
+      const characterNames = Object.keys(this.characters);
+      const charactersAmount = characterNames.length;
+      this.character = characterNames[Math.floor(Math.random() * charactersAmount)];
+
+      const skinsAmount = this.characters[this.character];
+      this.skin = Math.ceil(Math.random() * skinsAmount);
+
+      // Prevent dupes
+      const alreadyExists = this.randomCards.some((card) => {
+        return card.character === this.character;
+      });
+      if (alreadyExists) {
+        this.getNormalRandomCharacter();
+      }
+    },
+    getLawlessRandomCharacter: function () {
+      const characterNames = Object.keys(this.characters);
+      const charactersAmount = characterNames.length;
+      this.character = characterNames[Math.floor(Math.random() * charactersAmount)];
+
+      const skinsAmount = this.characters[this.character];
+      this.skin = Math.ceil(Math.random() * skinsAmount);
+    },
+    getClassicRandomCharacter: function () {
+      if (Math.random() > 0.05) {
         this.character = 'doc';
       } else {
         const characterNames = Object.keys(this.characters);
@@ -369,17 +447,33 @@ Vue.createApp({
       const alreadyExists = this.randomCards.some((card) => {
         return card.character === this.character;
       });
-      if (this.trueRandom && this.character !== 'doc' && alreadyExists) {
-        this.getRandomCharacter();
-      }
-      if (!this.trueRandom && alreadyExists) {
-        this.getRandomCharacter();
+      if (this.character !== 'doc' && alreadyExists) {
+        this.getClassicRandomCharacter();
       }
     },
+    getIronmanRandomCharacter: function () {
+      const characterNames = this.unusedIronmanCharacters;
+      const charactersAmount = characterNames.length;
+      this.character = characterNames[Math.floor(Math.random() * charactersAmount)];
+
+      const skinsAmount = this.characters[this.character];
+      this.skin = Math.ceil(Math.random() * skinsAmount);
+    },
+    getRandomCharacter: function () {
+      const randomnessFunctionMap = {
+        [NORMAL]: this.getNormalRandomCharacter,
+        [LAWLESS]: this.getLawlessRandomCharacter,
+        [CLASSIC]: this.getClassicRandomCharacter,
+        [IRONMAN]: this.getIronmanRandomCharacter
+      };
+      if (!this.unusedIronmanCharacters.length) {
+        randomnessFunctionMap[IRONMAN] = this.getNormalRandomCharacter;
+      }
+      randomnessFunctionMap[this.randomness]();
+    },
     getRandomCharacters: function (amount) {
-      const front = !!((this.spinLocation + OFFSET) % 360);
       // if facing the front half of cylinder
-      if (front) {
+      if (this.front) {
         // remove the back half of the array
         this.randomCards.splice((-1 * amount), amount);
         for (let i = 0; i < amount; i++) {
@@ -404,9 +498,28 @@ Vue.createApp({
       }
     },
     rollForCharacter: function () {
+      if (
+        !this.unusedIronmanCharacters.length &&
+        this.randomness === IRONMAN
+      ) {
+        this.usedIronmanCharacters = [];
+        this.getRandomCharacters(16)
+        return;
+      }
       this.playRandomSound();
       this.spinLocation = this.spinLocation - 180;
       this.getRandomCharacters(8);
+      this.markIronmanCharacterAsUsed();
+    },
+    markIronmanCharacterAsUsed: function () {
+      if (this.randomness === IRONMAN) {
+        this.usedIronmanCharacters.push(this.currentCard);
+        if (!this.unusedIronmanCharacters.length) {
+          setTimeout(() => {
+            this.getRandomCharacters(16);
+          }, 3000);
+        }
+      }
     },
     initializeCorners: function () {
       const indices = this.getRandomCorners();
@@ -421,7 +534,10 @@ Vue.createApp({
       });
       setInterval(() => {
         let now = new Date();
-        if (this.lastMovement.getTime() + 5000 < now.getTime()) {
+        if (
+          this.lastMovement.getTime() + 5000 < now.getTime() &&
+          this.fadeWhenIdle
+        ) {
           this.fadeOut = true;
         } else {
           this.fadeOut = false;
@@ -434,7 +550,8 @@ Vue.createApp({
         this.background = settings.background;
         this.fadeWhenIdle = settings.fadeWhenIdle;
         this.showImages = settings.showImages;
-        this.trueRandom = settings.trueRandom;
+        this.randomness = settings.randomness;
+        this.usedIronmanCharacters = settings.usedIronmanCharacters;
         this.volume = settings.volume;
       }
     },
@@ -443,15 +560,49 @@ Vue.createApp({
     }
   },
   computed: {
+    NORMAL: function () {
+      return NORMAL;
+    },
+    CLASSIC: function () {
+      return CLASSIC;
+    },
+    LAWLESS: function () {
+      return LAWLESS;
+    },
+    IRONMAN: function () {
+      return IRONMAN;
+    },
     characterIndex: function () {
       return Object.keys(this.characters).indexOf(this.character);
+    },
+    unusedIronmanCharacters: function () {
+      const used = (this.usedIronmanCharacters || [])
+        .map((card) => {
+          return card.character;
+        });
+      return Object
+        .keys(this.characters)
+        .filter((character) => {
+          return !used.includes(character);
+        });
+    },
+    currentCard: function () {
+      if (this.front) {
+        return this.randomCards[11]
+      }
+      return this.randomCards[3];
+    },
+    front: function () {
+      // true = facing the front half of cylinder
+      return !!((this.spinLocation + OFFSET) % 360);
     },
     dataToSave: function () {
       return JSON.stringify({
         background: this.background,
         fadeWhenIdle: this.fadeWhenIdle,
         showImages: this.showImages,
-        trueRandom: this.trueRandom,
+        randomness: this.randomness,
+        usedIronmanCharacters: this.usedIronmanCharacters || [],
         volume: this.volume
       });
     }
