@@ -238,6 +238,9 @@ Vue.createApp({
       topRight: null,
       bottomLeft: null,
       bottomRight: null,
+      fadeWhenIdle: true,
+      fadeOut: false,
+      lastMovement: new Date(),
       character: 'doc',
       skin: 1,
       volume: 100,
@@ -459,11 +462,25 @@ Vue.createApp({
       this.bottomLeft = imageMap[indices[2]];
       this.bottomRight = imageMap[indices[3]];
     },
+    fadePageWhenIdle: function () {
+      document.body.addEventListener('mousemove', () => {
+        this.lastMovement = new Date();
+      });
+      setInterval(() => {
+        let now = new Date();
+        if (this.lastMovement.getTime() + 5000 < now.getTime()) {
+          this.fadeOut = true;
+        } else {
+          this.fadeOut = false;
+        }
+      }, 1000);
+    },
     loadSettings: function () {
       const settings = JSON.parse(localStorage.getItem(APP_NAME));
       console.log(settings);
       if (settings) {
         this.background = settings.background;
+        this.fadeWhenIdle = settings.fadeWhenIdle;
         this.showImages = settings.showImages;
         this.randomness = settings.randomness;
         this.usedIronmanCharacters = settings.usedIronmanCharacters;
@@ -515,6 +532,7 @@ Vue.createApp({
     dataToSave: function () {
       return JSON.stringify({
         background: this.background,
+        fadeWhenIdle: this.fadeWhenIdle,
         showImages: this.showImages,
         randomness: this.randomness,
         usedIronmanCharacters: this.usedIronmanCharacters || [],
@@ -528,6 +546,7 @@ Vue.createApp({
     }
   },
   created: function () {
+    this.fadePageWhenIdle();
     this.loadSettings();
     this.initializeCorners();
     this.getRandomCharacters(16);

@@ -36,11 +36,18 @@
         :class="{ hide: background !== 'green' }"
       ></div>
       <div
+        class="bg-purple"
+        :class="{ hide: background !== 'purple' }"
+      ></div>
+      <div
         class="bg-black"
         :class="{ hide: background !== 'black' }"
       ></div>
 
-      <div class="title">
+      <div
+        class="title"
+        :class="fadeOut ? 'fade-out' : 'fade-in'"
+      >
         <svg
           class="melee-slant"
           xmlns="http://www.w3.org/2000/svg"
@@ -63,6 +70,11 @@
 
       <div
         class="carousel"
+        :class="{
+          'fade-in': !fadeOut,
+          'fade-out': fadeOut,
+          'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
+        }"
         role="button"
         tabindex="0"
         @click="rollForCharacter"
@@ -119,7 +131,11 @@
 
       <div
         class="controls"
-        :class="{ 'green-screen': ['blue', 'green'].includes(background) }"
+        :class="{
+          'fade-in': !fadeOut,
+          'fade-out': fadeOut,
+          'green-screen': ['blue', 'green'].includes(background)
+        }"
       >
         <menu-items
           v-model="background"
@@ -129,6 +145,7 @@
             'still',
             'blue',
             'green',
+            'purple',
             'black'
           ]"
         >
@@ -166,6 +183,11 @@
             those that want some nostalgia.
           </p>
         </div>
+
+        <menu-item v-model="fadeWhenIdle" :volume="volume">
+          Fade when idle
+        </menu-item>
+
 
         <label class="slider">
           <button @click="toggleMute">
@@ -211,6 +233,7 @@
 
       <a
         class="tweetch"
+        :class="fadeOut ? 'fade-out' : 'fade-in'"
         href="https://twitch.tv/fknsilver"
         title="twitch.tv/fknsilver"
       >
@@ -226,7 +249,10 @@
         </svg>
       </a>
 
-      <div v-if="showImages">
+      <div
+        v-if="showImages"
+        :class="fadeOut ? 'fade-out' : 'fade-in'"
+      >
         <corner-image
           name="top-left"
           :corner="topLeft"

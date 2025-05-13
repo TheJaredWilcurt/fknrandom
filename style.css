@@ -90,6 +90,7 @@ label {
 }
 .bg-blue,
 .bg-green,
+.bg-purple,
 .bg-black {
     position: fixed;
     top: 0px;
@@ -102,8 +103,17 @@ label {
 }
 .bg-blue { background: #00F; }
 .bg-green { background: #0F0; }
+.bg-purple { background: #5C4561; }
 .bg-black { background: #000; }
 .hide { opacity: 0.0 }
+.fade-in {
+    opacity: 1.0 !important;
+    transition: 2s ease opacity;
+}
+.fade-out {
+    opacity: 0.0 !important;
+    transition: 2s ease opacity;
+}
 
 h1,
 h2 {
@@ -635,6 +645,9 @@ h2 {
     animation:
         throbbing-selector 3s ease-in-out infinite,
         selector-border 10s ease-in-out infinite;
+}
+.green-screen .card {
+    background: linear-gradient(#111, #414E57, #111);
 }
 
 @keyframes throbbing-selector {
