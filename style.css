@@ -106,6 +106,14 @@ label {
 .bg-purple { background: #5C4561; }
 .bg-black { background: #000; }
 .hide { opacity: 0.0 }
+.fade-in {
+    opacity: 1.0 !important;
+    transition: 2s ease opacity;
+}
+.fade-out {
+    opacity: 0.0 !important;
+    transition: 2s ease opacity;
+}
 
 h1,
 h2 {
