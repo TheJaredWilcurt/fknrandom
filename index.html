@@ -69,10 +69,22 @@
       </div>
 
       <div
+        class="carousel-reset"
+        :class="{
+          'fade-in': !unusedIronmanCharacters.length,
+          'fade-out': unusedIronmanCharacters.length
+        }"
+      >
+        <div class="text-overlap">
+          <h1 class="title-text-stroke">RESET?</h1>
+          <h1 class="title-text-color">RESET?</h1>
+        </div>
+      </div>
+      <div
         class="carousel"
         :class="{
           'fade-in': !fadeOut,
-          'fade-out': fadeOut,
+          'fade-out': fadeOut || !unusedIronmanCharacters.length,
           'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
         }"
         role="button"
@@ -113,20 +125,21 @@
         v-if="randomness === IRONMAN"
         class="ironman"
       >
-        <div
-          v-for="card in usedIronmanCharacters"
-          class="mini-card"
-          :style="[
-            'background-position:',
-            'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - 0px)',
-            'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
-          ].join(' ')"
-        ></div>
-        <!--
-            'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + card.skin + 'px)',
-            'calc((var(--sprite-height) * -' + card.index + ') - ' + (card.index + 1) + 'px)'
-        -->
-        RESET
+        <transition-group name="fade">
+          <div
+            v-for="card in usedIronmanCharacters"
+            class="mini-card"
+          >
+            <div
+              class="mini-character"
+              :style="[
+                'background-position:',
+                'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + ((card.skin * SPRITE_RATIO) * (3 * SPRITE_RATIO)) + 'px)',
+                'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
+              ].join(' ')"
+            ></div>
+          </div>
+        </transition-group>
       </div>
 
       <div
@@ -173,7 +186,7 @@
             Fully random, but you cannot get the same character twice in a row.
           </p>
           <p v-if="randomness === IRONMAN">
-            After a character is shown, they are removed from the deck until all characters have gone.
+            After a character is shown, they are removed from the deck until one character remains.
           </p>
           <p v-if="randomness === LAWLESS">
             No rules, purely random, may have duplicates or pick the same character multiple times in a row.
@@ -233,7 +246,11 @@
 
       <a
         class="tweetch"
-        :class="fadeOut ? 'fade-out' : 'fade-in'"
+        :class="{
+          'fade-out': fadeOut,
+          'fade-in': !fadeOut,
+          'purple-screen': background === 'purple'
+        }"
         href="https://twitch.tv/fknsilver"
         title="twitch.tv/fknsilver"
       >

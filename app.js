@@ -67,6 +67,10 @@ const CLASSIC = 'classic';
 const LAWLESS = 'lawless';
 const IRONMAN = 'ironman';
 
+const SPRITE_WIDTH = 136;
+const SPRITE_HEIGHT = 188;
+const SPRITE_RATIO = SPRITE_WIDTH / SPRITE_HEIGHT;
+
 const OFFSET = 11.25 + (22.5 * 3);
 
 const CornerImage = {
@@ -231,6 +235,8 @@ Vue.createApp({
   },
   data: function () {
     return {
+      SPRITE_RATIO,
+      asdf: 0,
       background: 'animated',
       showImages: true,
       randomness: NORMAL,
@@ -238,7 +244,7 @@ Vue.createApp({
       topRight: null,
       bottomLeft: null,
       bottomRight: null,
-      fadeWhenIdle: true,
+      fadeWhenIdle: false,
       fadeOut: false,
       lastMovement: new Date(),
       character: 'doc',
@@ -445,6 +451,14 @@ Vue.createApp({
       }
     },
     rollForCharacter: function () {
+      if (
+        !this.unusedIronmanCharacters.length &&
+        this.randomness === IRONMAN
+      ) {
+        this.usedIronmanCharacters = [];
+        this.getRandomCharacters(16)
+        return;
+      }
       this.playRandomSound();
       this.spinLocation = this.spinLocation - 180;
       this.getRandomCharacters(8);
@@ -468,7 +482,10 @@ Vue.createApp({
       });
       setInterval(() => {
         let now = new Date();
-        if (this.lastMovement.getTime() + 5000 < now.getTime()) {
+        if (
+          this.lastMovement.getTime() + 5000 < now.getTime() &&
+          this.fadeWhenIdle
+        ) {
           this.fadeOut = true;
         } else {
           this.fadeOut = false;

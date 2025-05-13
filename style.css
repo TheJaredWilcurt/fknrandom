@@ -78,7 +78,7 @@ label {
 }
 
 .bg-vid {
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;
@@ -176,6 +176,12 @@ h2 {
 .tweetch svg:hover {
     fill: #906CD3;
 }
+.purple-screen.tweetch svg {
+    fill: #FFFA;
+}
+.purple-screen.tweetch svg:hover {
+    fill: #FFF;
+}
 
 .controls {
     display: flex;
@@ -242,18 +248,35 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    max-width: calc(100% - 440px);
+    margin: 0px auto;
     font-family: Univers, sans-serif;
     font-weight: 700;
     text-align: center;
 }
 .mini-card {
-    --sprite-width: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 53px;
+    height: 72px;
+    background: linear-gradient(#111, #4666, #111);
+    background-position: center;
+    background-size: 100% 100%;
+    border-radius: 10px;
+    margin: 3px 4px;
+    box-shadow: inset 0px 0px 0px 1px #0006;
+}
+.mini-character {
+    --sprite-width: 44px;
     --sprite-height: 63px;
     width: var(--sprite-width);
     height: calc(var(--sprite-height) - 2px);
     background-image: url('_images/spritesheet.png');
     background-position: var(--sprite-width) 0px;
     background-size: auto calc(26 * var(--sprite-height));
+    margin: 0px;
     filter: drop-shadow(10px 9px 7px #000A);
 }
 
@@ -648,6 +671,9 @@ h2 {
 }
 .green-screen .card {
     background: linear-gradient(#111, #414E57, #111);
+}
+.carousel-reset .text-overlap {
+    font-size: 56px;
 }
 
 @keyframes throbbing-selector {
