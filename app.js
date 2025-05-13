@@ -73,6 +73,48 @@ const SPRITE_RATIO = SPRITE_WIDTH / SPRITE_HEIGHT;
 
 const OFFSET = 11.25 + (22.5 * 3);
 
+const BaseAccordion = {
+  template: `
+    <div :style="accordionContainer">
+      <div :style="accordionInner">
+        <slot></slot>
+      </div>
+    </div>
+  `,
+  name: 'BaseAccordion',
+  props: {
+    show: {
+      type: Boolean,
+      default: true
+    },
+    speedMs: {
+      type: Number,
+      default: 750
+    }
+  },
+  computed: {
+    accordionContainer: function () {
+      let frames = '1';
+      if (!this.show) {
+        frames = '0';
+      }
+      return [
+        'display: grid',
+        'grid-template-rows: ' + frames + 'fr',
+        'margin-bottom: ' + (-10 * frames) + 'px',
+        'transition: ' + this.speedMs + 'ms ease all'
+      ].join(';');
+    },
+    accordionInner: function () {
+      return [
+        'grid-row: 1 / span 2',
+        'padding-bottom: 10px',
+        'overflow: hidden'
+      ].join(';');
+    }
+  }
+};
+
 const CornerImage = {
   name: 'CornerImage',
   template: `
@@ -229,6 +271,7 @@ const MenuItems = {
 
 Vue.createApp({
   components: {
+    BaseAccordion,
     CornerImage,
     MenuItem,
     MenuItems
@@ -236,7 +279,8 @@ Vue.createApp({
   data: function () {
     return {
       SPRITE_RATIO,
-      asdf: 0,
+      showRandomnessExplainer: false,
+      showIdleExplainer: false,
       background: 'animated',
       showImages: true,
       randomness: NORMAL,

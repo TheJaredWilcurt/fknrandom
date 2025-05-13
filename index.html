@@ -159,6 +159,38 @@
         }"
       >
         <menu-items
+          v-model="randomness"
+          :volume="volume"
+          :options="[
+            NORMAL,
+            IRONMAN,
+            LAWLESS,
+            CLASSIC
+          ]"
+          @mouseover="showRandomnessExplainer = true"
+          @mouseout="showRandomnessExplainer = false"
+        >
+          Randomness
+        </menu-items>
+        <base-accordion :show="showRandomnessExplainer">
+          <div class="explainer">
+            <p v-if="randomness === NORMAL">
+              Fully random, but you cannot get the same character twice in a row.
+            </p>
+            <p v-if="randomness === IRONMAN">
+              After a character is shown, they are removed from the deck until one character remains.
+            </p>
+            <p v-if="randomness === LAWLESS">
+              No rules, purely random, may have duplicates or pick the same character multiple times in a row.
+            </p>
+            <p v-if="randomness === CLASSIC" class="justify">
+              The old website had a proclivity of picking Doc like 90% of the time. This setting is for
+              those that want <em>some nostalgia</em>.
+            </p>
+          </div>
+        </base-accordion>
+
+        <menu-items
           v-model="background"
           :volume="volume"
           :options="[
@@ -177,38 +209,22 @@
           Images
         </menu-item>
 
-        <menu-items
-          v-model="randomness"
+        <menu-item
+          v-model="fadeWhenIdle"
           :volume="volume"
-          :options="[
-            NORMAL,
-            IRONMAN,
-            LAWLESS,
-            CLASSIC
-          ]"
+          @mouseover="showIdleExplainer = true"
+          @mouseout="showIdleExplainer = false"
         >
-          Randomness
-        </menu-items>
-        <div class="explainer">
-          <p v-if="randomness === NORMAL">
-            Fully random, but you cannot get the same character twice in a row.
-          </p>
-          <p v-if="randomness === IRONMAN">
-            After a character is shown, they are removed from the deck until one character remains.
-          </p>
-          <p v-if="randomness === LAWLESS">
-            No rules, purely random, may have duplicates or pick the same character multiple times in a row.
-          </p>
-          <p v-if="randomness === CLASSIC">
-            The old website had a proclivity of picking Doc like 90% of the time. This setting is for
-            those that want some nostalgia.
-          </p>
-        </div>
-
-        <menu-item v-model="fadeWhenIdle" :volume="volume">
           Fade when idle
         </menu-item>
-
+        <base-accordion :show="showIdleExplainer">
+          <div class="explainer">
+            <p class="justify">
+              Fades out the UI if the mouse hasn't moved in the last 5 seconds.
+              Prevents OBS overlays from covering gameplay.
+            </p>
+          </div>
+        </base-accordion>
 
         <label class="slider">
           <button @click="toggleMute">
