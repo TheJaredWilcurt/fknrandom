@@ -28,12 +28,20 @@
         src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.jpg"
       >
       <div
-        v-else-if="background === 'blue'"
         class="bg-blue"
+        :class="{ hide: background !== 'blue' }"
       ></div>
       <div
-        v-else-if="background === 'green'"
         class="bg-green"
+        :class="{ hide: background !== 'green' }"
+      ></div>
+      <div
+        class="bg-purple"
+        :class="{ hide: background !== 'purple' }"
+      ></div>
+      <div
+        class="bg-black"
+        :class="{ hide: background !== 'black' }"
       ></div>
 
       <div class="title">
@@ -59,6 +67,7 @@
 
       <div
         class="carousel"
+        :class="{ 'green-screen': ['green', 'blue', 'purple', 'black'].includes(background) }"
         role="button"
         tabindex="0"
         @click="rollForCharacter"
@@ -105,7 +114,9 @@
             'animated',
             'still',
             'blue',
-            'green'
+            'green',
+            'purple',
+            'black'
           ]"
         >
           Background
