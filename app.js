@@ -293,8 +293,8 @@ Vue.createApp({
       lastMovement: new Date(),
       character: 'doc',
       skin: 1,
-      volume: 100,
-      previousVolume: 100,
+      volume: 25,
+      previousVolume: 25,
       characters: {
         'doc': 5,
         'mario': 5,
@@ -338,8 +338,8 @@ Vue.createApp({
         this.volume === 0 &&
         this.previousVolume === 0
       ) {
-        this.volume = 100;
-        this.previousVolume = 100;
+        this.volume = 25;
+        this.previousVolume = 25;
       } else if (this.volume === 0) {
         this.volume = this.previousVolume;
       } else {
