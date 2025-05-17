@@ -66,6 +66,12 @@ const NORMAL = 'normal';
 const CLASSIC = 'classic';
 const LAWLESS = 'lawless';
 const IRONMAN = 'ironman';
+const ALLOWED_RANDOMNESS = [
+  NORMAL,
+  CLASSIC,
+  LAWLESS,
+  IRONMAN
+];
 
 const SPRITE_WIDTH = 136;
 const SPRITE_HEIGHT = 188;
@@ -469,7 +475,8 @@ Vue.createApp({
       if (!this.unusedIronmanCharacters.length) {
         randomnessFunctionMap[IRONMAN] = this.getNormalRandomCharacter;
       }
-      randomnessFunctionMap[this.randomness]();
+      const randomType = randomnessFunctionMap[this.randomness] || this.getNormalRandomCharacter;
+      randomType();
     },
     getRandomCharacters: function (amount) {
       // if facing the front half of cylinder
@@ -547,10 +554,14 @@ Vue.createApp({
     loadSettings: function () {
       const settings = JSON.parse(localStorage.getItem(APP_NAME));
       if (settings) {
-        this.background = settings.background;
+        if (settings.background) {
+          this.background = settings.background;
+        }
         this.fadeWhenIdle = settings.fadeWhenIdle;
         this.showImages = settings.showImages;
-        this.randomness = settings.randomness;
+        if (ALLOWED_RANDOMNESS.includes(settings.randomness)) {
+          this.randomness = settings.randomness;
+        }
         this.usedIronmanCharacters = settings.usedIronmanCharacters;
         this.volume = settings.volume;
       }
