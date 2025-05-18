@@ -165,7 +165,10 @@
       </div>
     </BaseAccordion>
 
-    <MeleeVolume v-model="volume" />
+    <MeleeVolume
+      :modelValue="volume"
+      @update:modelValue="updatePlayingSoundVolume"
+    />
   </div>
 
   <TweetchLogo
@@ -188,6 +191,8 @@ import MeleeVolume from '@/components/MeleeVolume.vue';
 import MenuItem from '@/components/MenuItem.vue';
 import MenuItems from '@/components/MenuItems.vue';
 import TweetchLogo from '@/components/TweetchLogo.vue';
+
+import { playRandomSound } from '@/helpers/sounds.js';
 
 const APP_NAME = 'fknrandom';
 const NORMAL = 'normal';
@@ -232,6 +237,7 @@ export default {
       character: 'doc',
       skin: 1,
       volume: 25,
+      currentSound: null,
       characters: {
         'doc': 5,
         'mario': 5,
@@ -262,10 +268,6 @@ export default {
       },
       usedIronmanCharacters: [],
       spinLocation: (-1 * OFFSET),
-      personSoundMap: {
-        bobby: 71,
-        hank: 325
-      },
       randomCards: []
     };
   },
@@ -278,30 +280,6 @@ export default {
     SPRITE_RATIO
   },
   methods: {
-    getRandomSound: function (person) {
-      const max = this.personSoundMap[person];
-      const random = Math.ceil(Math.random() * max);
-      return '/fknrandom/_sound/' + person + '/' + random + '.mp3';
-    },
-    getRandomBobby: function () {
-      return this.getRandomSound('bobby');
-    },
-    getRandomHank: function () {
-      return this.getRandomSound('hank');
-    },
-    playRandomSound: function () {
-      const bobby = this.personSoundMap.bobby;
-      const hank = this.personSoundMap.hank;
-      let file;
-      if (Math.round(Math.random() * (bobby + hank)) < bobby) {
-        file = this.getRandomBobby();
-      } else {
-        file = this.getRandomHank();
-      }
-      let sound = new Audio(file);
-      sound.volume = this.volume / 100;
-      sound.play();
-    },
     getNormalRandomCharacter: function () {
       const characterNames = Object.keys(this.characters);
       const charactersAmount = characterNames.length;
@@ -400,10 +378,16 @@ export default {
         this.getRandomCharacters(16)
         return;
       }
-      this.playRandomSound();
+      this.currentSound = playRandomSound(this.volume);
       this.spinLocation = this.spinLocation - 180;
       this.getRandomCharacters(8);
       this.markIronmanCharacterAsUsed();
+    },
+    updatePlayingSoundVolume: function (volume) {
+      this.volume = volume;
+      if (this.currentSound) {
+        this.currentSound.volume = volume / 100;
+      }
     },
     markIronmanCharacterAsUsed: function () {
       if (this.randomness === IRONMAN) {
