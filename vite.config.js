@@ -6,6 +6,18 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 
 export default defineConfig({
   base: '/fknrandom',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'normalize.css': ['normalize.css'],
+          vue: ['vue'],
+          'vue-options-api-constants-plugin': ['vue-options-api-constants-plugin']
+        }
+      }
+    },
+    sourcemap: true
+  },
   plugins: [
     vue(),
     vueDevTools({
