@@ -268,7 +268,11 @@ export default {
       },
       usedIronmanCharacters: [],
       spinLocation: (-1 * OFFSET),
-      randomCards: []
+      randomCards: [],
+      playedSoundsMap: {
+        bobby: [],
+        hank: []
+      }
     };
   },
   constants: {
@@ -378,7 +382,9 @@ export default {
         this.getRandomCharacters(16)
         return;
       }
-      this.currentSound = playRandomSound(this.volume);
+      const randomSoundResponse = playRandomSound(this.volume, this.playedSoundsMap);
+      this.currentSound = randomSoundResponse.sound;
+      this.playedSoundsMap = randomSoundResponse.playedSoundsMap;
       this.spinLocation = this.spinLocation - 180;
       this.getRandomCharacters(8);
       this.markIronmanCharacterAsUsed();
@@ -426,6 +432,12 @@ export default {
         if (ALLOWED_RANDOMNESS.includes(settings.randomness)) {
           this.randomness = settings.randomness;
         }
+        if (settings.playedSoundsMap?.bobby) {
+          this.playedSoundsMap.bobby = settings.playedSoundsMap.bobby || [];
+        }
+        if (settings.playedSoundsMap?.hank) {
+          this.playedSoundsMap.hank = settings.playedSoundsMap.hank || [];
+        }
         this.usedIronmanCharacters = settings.usedIronmanCharacters;
         this.volume = settings.volume;
       }
@@ -465,6 +477,7 @@ export default {
         fadeWhenIdle: this.fadeWhenIdle,
         showImages: this.showImages,
         randomness: this.randomness,
+        playedSoundsMap: this.playedSoundsMap || {},
         usedIronmanCharacters: this.usedIronmanCharacters || [],
         volume: this.volume
       });
