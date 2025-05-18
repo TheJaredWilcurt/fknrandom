@@ -37,15 +37,13 @@ const getRandomHank = function () {
 };
 
 const logSound = function (file) {
-  console.log(
-    file
-      .replace('/fknrandom/_sound/', 'PLAYED: ')
-      .replace('hank/', 'Hank #')
-      .replace('bobby/', 'Bobby #')
-      .replace('.mp3', ' - ') +
-    location.href +
-    file.replace('/fknrandom', '')
-  );
+  const message = file
+    .replace('/fknrandom/_sound/', 'PLAYED: ')
+    .replace('hank/', 'Hank #')
+    .replace('bobby/', 'Bobby #')
+    .replace('.mp3', '');
+  const link = (location.href + file.replace('/fknrandom', '')).replace('//_', '/_');
+  console.log(message + ' - ' + link);
 };
 
 export const playRandomSound = function (volume, outerPlayedSoundsMap) {
