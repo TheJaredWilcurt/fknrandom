@@ -9,7 +9,7 @@
   />
 
   <div
-    v-if="randomness === IRONMAN"
+    v-if="ironMode"
     class="carousel-reset"
     :class="{
       'fade-in': !unusedIronmanCharacters.length,
@@ -30,7 +30,7 @@
     class="carousel"
     :class="{
       'fade-in': !fadeOut,
-      'fade-out': fadeOut || (!unusedIronmanCharacters.length && randomness === IRONMAN),
+      'fade-out': fadeOut || (!unusedIronmanCharacters.length && ironMode),
       'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
     }"
     role="button"
@@ -68,7 +68,7 @@
     <div class="selected-card"></div>
   </div>
   <div
-    v-if="randomness === IRONMAN"
+    v-if="ironMode"
     class="ironman"
     :class="{
       'fade-in': !fadeOut,
@@ -80,7 +80,10 @@
         v-for="(card, cardIndex) in usedIronmanCharacters"
         :key="'card' + cardIndex"
         class="mini-card"
-        :class="{ 'green-screen': ['blue', 'green'].includes(background) }"
+        :class="{
+          'golf': randomness === IRONGOLF,
+          'green-screen': ['blue', 'green'].includes(background)
+        }"
       >
         <div
           class="mini-character"
@@ -89,9 +92,37 @@
             'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + ((card.skin * SPRITE_RATIO) * (3 * SPRITE_RATIO)) + 'px)',
             'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
           ].join(' ')"
-        ></div>
+        >
+          <template v-if="randomness === IRONGOLF">
+            <button
+              class="increment"
+              @click="ironGolfScores[card.character]++"
+            >
+              Increment {{ card.character }} Score
+            </button>
+            <button
+              class="decrement"
+              :disabled="ironGolfScores[card.character] < 2"
+              @click="decrementScore(card.character)"
+            >
+              Increment {{ card.character }} Score
+            </button>
+          </template>
+        </div>
+        <div
+          v-if="randomness === IRONGOLF"
+          class="golf-score"
+        >
+          {{ ironGolfScores[card.character] }}
+        </div>
       </div>
     </TransitionGroup>
+  </div>
+
+  <div v-if="randomness === IRONGOLF">
+    <div>Current: 0</div>
+    <div>Best possible: 0</div>
+    <div>PB: 0 (clear)</div>
   </div>
 
   <div
@@ -118,6 +149,9 @@
         </p>
         <p v-if="randomness === IRONMAN">
           After a character is shown, they are removed from the deck until one character remains.
+        </p>
+        <p v-if="randomness === IRONGOLF">
+          Same as Ironman, except you can keep track of how many attempts it took on each character.
         </p>
         <p v-if="randomness === LAWLESS">
           No rules, purely random, may have duplicates or pick the same character multiple times in a row.
@@ -198,10 +232,12 @@ const APP_NAME = 'fknrandom';
 const NORMAL = 'normal';
 const CLASSIC = 'classic';
 const LAWLESS = 'lawless';
+const IRONGOLF = 'irongolf'
 const IRONMAN = 'ironman';
 const ALLOWED_RANDOMNESS = [
   NORMAL,
   IRONMAN,
+  IRONGOLF,
   LAWLESS,
   CLASSIC
 ];
@@ -266,6 +302,34 @@ export default {
         'roy': 5,
         'sheik': 5
       },
+      ironGolfScores: {
+        'doc': 1,
+        'mario': 1,
+        'luigi': 1,
+        'bowser': 1,
+        'peach': 1,
+        'yoshi': 1,
+        'dk': 1,
+        'falcon': 1,
+        'gannon': 1,
+        'falco': 1,
+        'fox': 1,
+        'ness': 1,
+        'icies': 1,
+        'kirby': 1,
+        'samus': 1,
+        'zelda': 1,
+        'link': 1,
+        'young-link': 1,
+        'pichu': 1,
+        'pikachu': 1,
+        'puff': 1,
+        'mewtwo': 1,
+        'game-and-watch': 1,
+        'marth': 1,
+        'roy': 1,
+        'sheik': 1
+      },
       usedIronmanCharacters: [],
       spinLocation: (-1 * OFFSET),
       randomCards: [],
@@ -279,6 +343,7 @@ export default {
     ALLOWED_RANDOMNESS,
     CLASSIC,
     LAWLESS,
+    IRONGOLF,
     IRONMAN,
     NORMAL,
     SPRITE_RATIO
@@ -339,10 +404,12 @@ export default {
         [NORMAL]: this.getNormalRandomCharacter,
         [LAWLESS]: this.getLawlessRandomCharacter,
         [CLASSIC]: this.getClassicRandomCharacter,
-        [IRONMAN]: this.getIronmanRandomCharacter
+        [IRONMAN]: this.getIronmanRandomCharacter,
+        [IRONGOLF]: this.getIronmanRandomCharacter
       };
       if (!this.unusedIronmanCharacters.length) {
         randomnessFunctionMap[IRONMAN] = this.getNormalRandomCharacter;
+        randomnessFunctionMap[IRONGOLF] = this.getNormalRandomCharacter;
       }
       const randomType = randomnessFunctionMap[this.randomness] || this.getNormalRandomCharacter;
       randomType();
@@ -373,12 +440,23 @@ export default {
         }
       }
     },
+    decrementScore: function (character) {
+      if (this.ironGolfScores[character] > 1) {
+        this.ironGolfScores[character] = this.ironGolfScores[character] - 1;
+      }
+    },
+    resetGolfScores: function () {
+      for (let character in this.ironGolfScores) {
+        this.ironGolfScores[character] = 0;
+      }
+    },
     rollForCharacter: function () {
       if (
         !this.unusedIronmanCharacters.length &&
-        this.randomness === IRONMAN
+        this.ironMode
       ) {
         this.usedIronmanCharacters = [];
+        this.resetGolfScores();
         this.getRandomCharacters(16)
         return;
       }
@@ -396,7 +474,7 @@ export default {
       }
     },
     markIronmanCharacterAsUsed: function () {
-      if (this.randomness === IRONMAN) {
+      if (this.ironMode) {
         this.usedIronmanCharacters.push(this.currentCard);
         if (!this.unusedIronmanCharacters.length) {
           setTimeout(() => {
@@ -438,6 +516,9 @@ export default {
         if (settings.playedSoundsMap?.hank) {
           this.playedSoundsMap.hank = settings.playedSoundsMap.hank || [];
         }
+        if (settings.ironGolfScores) {
+          this.ironGolfScores = settings.ironGolfScores || {};
+        }
         this.usedIronmanCharacters = settings.usedIronmanCharacters;
         this.volume = settings.volume;
       }
@@ -447,6 +528,9 @@ export default {
     }
   },
   computed: {
+    ironMode: function () {
+      return [IRONMAN, IRONGOLF].includes(this.randomness);
+    },
     characterIndex: function () {
       return Object.keys(this.characters).indexOf(this.character);
     },
@@ -479,6 +563,7 @@ export default {
         randomness: this.randomness,
         playedSoundsMap: this.playedSoundsMap || {},
         usedIronmanCharacters: this.usedIronmanCharacters || [],
+        ironGolfScores: this.ironGolfScores || {},
         volume: this.volume
       });
     }

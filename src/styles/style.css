@@ -41,6 +41,10 @@
   font-style: normal;
 }
 
+:root {
+    --gold: #F8E50C;
+}
+
 [v-cloak] {
     display: none !important;
 }
@@ -261,6 +265,7 @@ h2 {
     text-align: center;
 }
 .mini-card {
+    --mini-card-width: 53px;
     position: relative;
     display: flex;
     align-items: center;
@@ -275,12 +280,20 @@ h2 {
     box-shadow: inset 0px 0px 0px 1px #0006;
     transition: 1s ease all;
 }
-.green-screen.mini-card {
+.mini-card.golf {
+    margin: 17px 4px;
+}
+.mini-card.green-screen {
     background: linear-gradient(#111, #414E57, #111);
 }
 .mini-character {
     --sprite-width: 44px;
     --sprite-height: 63px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
     width: var(--sprite-width);
     height: calc(var(--sprite-height) - 2px);
     background-image: url('/fknrandom/_images/spritesheet.png');
@@ -289,6 +302,63 @@ h2 {
     margin: 0px;
     filter: drop-shadow(10px 9px 7px #000A);
 }
+.increment,
+.decrement {
+    background: transparent;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    font-size: 0px;
+    opacity: 0.0;
+    transition: 0.2s ease opacity;
+    cursor: pointer;
+}
+.increment:hover,
+.decrement:hover,
+.increment:focus,
+.decrement:focus {
+    opacity: 1.0;
+}
+.increment:before,
+.decrement:before {
+    --mini-card-half-width: calc(var(--mini-card-width) / 2);
+    content: '';
+    display: block;
+    width: var(--mini-card-half-width);
+    height: var(--mini-card-half-width);
+    border-width: var(--mini-card-half-width);
+    border-style: solid;
+    border-color: transparent;
+}
+.increment:before {
+    border-top-width: 0px;
+    border-bottom-color: var(--gold);
+}
+[disabled].increment:before,
+[disabled].decrement:before {
+    filter: saturate(0%);
+}
+.decrement:before {
+    border-top-color: var(--gold);
+    border-bottom-width: 0px;
+}
+.golf-score {
+  position: absolute;
+  bottom: -23px;
+  background: linear-gradient(#111, #111, #313A40AA, #414E57AA, #111);
+  width: 100%;
+  border-width: 0px 1px 1px 1px;
+  border-style: solid;
+  border-color: #0006;
+  border-radius: 0px 0px 8px 8px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  z-index: -1;
+}
+.green-screen .golf-score {
+  background: linear-gradient(#111, #111, #313A40, #414E57, #111);
+}
+
 
 .menu-item {
     position: relative;
@@ -419,12 +489,12 @@ h2 {
 .menu-item-previous {
     top: 6px;
     left: 196px;
-    border-color: transparent #F8E50C transparent transparent;
+    border-color: transparent var(--gold) transparent transparent;
 }
 .menu-item-next {
     top: 10px;
     left: 341px;
-    border-color: transparent transparent transparent #F8E50C;
+    border-color: transparent transparent transparent var(--gold);
 }
 .menu-item .on,
 .menu-item .off {
