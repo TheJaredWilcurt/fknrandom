@@ -163,7 +163,7 @@
           :disabled="unusedIronmanCharacters.length"
           class="confirm"
           :class="{ 'submit-new-pb': (!unusedIronmanCharacters.length && (currentScore <= personalBest || personalBest === 0)) }"
-          :title="unusedIronmanCharacters.length ? 'You cannot submit until you\'ve won with each character.' : ''"
+          :title="submitButtonMessage"
           @click="setNewPersonalBest"
         >
           Submit
@@ -662,6 +662,14 @@ export default {
         score = score + this.ironGolfScores[character];
       }
       return score;
+    },
+    submitButtonMessage: function () {
+      if (this.unusedIronmanCharacters.length) {
+        return 'You cannot submit until you\'ve won with each character.'
+      } else if ((this.currentScore > this.personalBest) && this.personalBest > 0) {
+        return 'Your new score must be lower than your Personal Best to submit it.';
+      }
+      return undefined;
     },
     currentCard: function () {
       if (this.front) {
