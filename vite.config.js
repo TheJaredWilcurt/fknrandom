@@ -10,6 +10,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
+          'canvas-confetti': ['canvas-confetti'],
           'normalize.css': ['normalize.css'],
           vue: ['vue'],
           'vue-options-api-constants-plugin': ['vue-options-api-constants-plugin']
