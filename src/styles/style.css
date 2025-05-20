@@ -258,7 +258,7 @@ h2 {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    max-width: calc(100% - 440px);
+    max-width: 800px;
     margin: 0px auto;
     font-family: Univers, sans-serif;
     font-weight: 700;
@@ -418,17 +418,38 @@ h2 {
 }
 .score-board-content {
     display: flex;
+}
+.perfection {
+    color: var(--gold);
+    animation: glow-text 3s ease infinite;
+}
+.current-score {
+    display: flex;
+    align-items: center;
     justify-content: space-evenly;
+    width: 100%;
     background: #221924;
-    border-radius: 8px;
+    border-radius: 8px 0px 0px 8px;
     padding: 10px;
+}
+.best-possible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 200px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 0px 8px 8px 0px;
+    padding: 10px;
+    color: #000;
+    white-space: nowrap;
 }
 .confirmation-options {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding-top: 7px;
-    padding-bottom: 6px;
+    padding-top: 11px;
+    padding-bottom: 9px;
 }
 .cancel,
 .confirm,
@@ -441,7 +462,8 @@ h2 {
 .cancel {
     background: #FFFA;
 }
-.confirm {
+.confirm,
+.confirm[disabled]:hover {
     background: #93719AAA;
 }
 .cancel:hover {
@@ -449,6 +471,18 @@ h2 {
 }
 .confirm:hover {
     background: #93719A;
+}
+.confirm[disabled] {
+    border: 1px solid transparent;
+    cursor: not-allowed;
+}
+.submit-new-pb,
+.submit-new-pb:hover {
+    background: #F9EA3E;
+    border: 1px solid transparent;
+    color: #5E5703;
+    text-rendering: optimizelegibility;
+    animation: glow 3s ease-in-out infinite;
 }
 
 .menu-item {
@@ -873,22 +907,44 @@ h2 {
 }
 
 @keyframes throbbing-selector {
-  0%,
-  100% { transform: translate3d(0px, 5px, 260px); }
-  50%  { transform: translate3d(0px, 5px, 220px); }
+    0%,
+    100% { transform: translate3d(0px, 5px, 260px); }
+    50%  { transform: translate3d(0px, 5px, 220px); }
 }
 @keyframes selector-border {
-  0%   { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
+    0%   { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
 }
 @keyframes spinning-menu-circle {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 @keyframes fading-menu-circle {
-  0%,
-  100% { opacity: 1.0 }
-  50%  { opacity: 0.9 }
+    0%,
+    100% { opacity: 1.0 }
+    50%  { opacity: 0.9 }
+}
+@keyframes glow {
+    0%,
+    100% {
+        box-shadow: 0px 0px 10px 2px #D2EDF0;
+        transform: scale(95%);
+    }
+    50%  {
+        box-shadow: 0px 0px 15px 3px #EADE54;
+        transform: scale(100%);
+    }
+}
+@keyframes glow-text {
+    0%,
+    100% {
+        text-shadow: 0px 0px 10px #D2EDF0;
+        transform: scale(95%);
+    }
+    50%  {
+        text-shadow: 0px 0px 15px #EADE54;
+        transform: scale(100%);
+    }
 }
 
 .fade-enter-active,

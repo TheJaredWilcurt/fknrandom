@@ -120,17 +120,20 @@
   </div>
 
   <div
-    v-if="randomness === IRONGOLF && !confirmation"
+    v-show="randomness === IRONGOLF && !confirmation"
     class="score-board"
   >
     <div class="score-board-title">
       <div style="width: 159px;">
-        <div class="compressed">
+        <div
+          class="compressed"
+          :style="personalBest === 26 ? 'color: var(--gold); text-shadow: 0px 0px 10px #EADE54;' : ''"
+        >
           PERSONAL BEST:
         </div>
       </div>
-      <span>
-        0
+      <span :class="{ perfection: personalBest === 26 }">
+        {{ personalBest }}
       </span>
       <button
         class="clear-score"
@@ -151,25 +154,36 @@
       </button>
     </div>
     <div class="score-board-content">
-      <div>
-        <strong>Current:</strong>
-        0
+      <div class="current-score">
+        <div>
+          <strong>Current:</strong>
+          {{ currentScore }}
+        </div>
+        <button
+          :disabled="unusedIronmanCharacters.length"
+          class="confirm"
+          :class="{ 'submit-new-pb': (!unusedIronmanCharacters.length && (currentScore <= personalBest || personalBest === 0)) }"
+          :title="unusedIronmanCharacters.length ? 'You cannot submit until you\'ve won with each character.' : ''"
+          @click="setNewPersonalBest"
+        >
+          Submit
+        </button>
       </div>
-      <div>
+      <div class="best-possible">
         <strong>Best possible:</strong>
-        0
+        <span>{{ bestPossibleScore }}</span>
       </div>
     </div>
   </div>
 
   <div
-    v-if="confirmation"
+    v-show="confirmation"
     class="confirmation score-board"
   >
     <div class="score-board-title compressed">
       You sho 'bout dat?
     </div>
-    <div class="confirmation-options score-board-content">
+    <div class="confirmation-options current-score">
       <button class="cancel" @click="confirmation = false">
         nah, we good
       </button>
@@ -385,6 +399,7 @@ export default {
         'roy': 1,
         'sheik': 1
       },
+      personalBest: 0,
       usedIronmanCharacters: [],
       spinLocation: (-1 * OFFSET),
       randomCards: [],
@@ -502,7 +517,7 @@ export default {
     },
     resetGolfScores: function () {
       for (let character in this.ironGolfScores) {
-        this.ironGolfScores[character] = 0;
+        this.ironGolfScores[character] = 1;
       }
     },
     rollForCharacter: function () {
@@ -528,9 +543,29 @@ export default {
         this.currentSound.volume = volume / 100;
       }
     },
+    setNewPersonalBest: function () {
+      if (
+        this.randomness !== IRONGOLF ||
+        this.unusedIronmanCharacters.length
+      ) {
+        return;
+      }
+      if (
+        this.personalBest === 0 ||
+        this.personalBest > this.currentScore
+      ) {
+        this.personalBest = this.currentScore;
+        this.celebrateNewPersonalBest();
+        this.rollForCharacter();
+      }
+    },
+    celebrateNewPersonalBest: function () {
+
+    },
     markIronmanCharacterAsUsed: function () {
       if (this.ironMode) {
         this.usedIronmanCharacters.push(this.currentCard);
+        this.ironGolfScores[this.currentCard.character] = 1;
         if (!this.unusedIronmanCharacters.length) {
           setTimeout(() => {
             this.getRandomCharacters(16);
@@ -563,7 +598,7 @@ export default {
     },
     clearPersonalBest: function () {
       this.confirmation = false;
-      console.log('STUB');
+      this.personalBest = 0;
     },
     loadSettings: function () {
       const settings = JSON.parse(localStorage.getItem(APP_NAME));
@@ -584,6 +619,9 @@ export default {
         }
         if (settings.ironGolfScores) {
           this.ironGolfScores = settings.ironGolfScores || {};
+        }
+        if (settings.personalBest) {
+          this.personalBest = settings.personalBest || 0;
         }
         this.usedIronmanCharacters = settings.usedIronmanCharacters;
         this.volume = settings.volume;
@@ -611,6 +649,20 @@ export default {
           return !used.includes(character);
         });
     },
+    currentScore: function () {
+      let score = 0;
+      this.usedIronmanCharacters.forEach((card) => {
+        score = score + this.ironGolfScores[card.character];
+      });
+      return score;
+    },
+    bestPossibleScore: function () {
+      let score = 0;
+      for (let character in this.ironGolfScores) {
+        score = score + this.ironGolfScores[character];
+      }
+      return score;
+    },
     currentCard: function () {
       if (this.front) {
         return this.randomCards[11]
@@ -627,6 +679,7 @@ export default {
         fadeWhenIdle: this.fadeWhenIdle,
         showImages: this.showImages,
         randomness: this.randomness,
+        personalBest: this.personalBest,
         playedSoundsMap: this.playedSoundsMap || {},
         usedIronmanCharacters: this.usedIronmanCharacters || [],
         ironGolfScores: this.ironGolfScores || {},
