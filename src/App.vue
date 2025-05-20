@@ -119,10 +119,64 @@
     </TransitionGroup>
   </div>
 
-  <div v-if="randomness === IRONGOLF">
-    <div>Current: 0</div>
-    <div>Best possible: 0</div>
-    <div>PB: 0 (clear)</div>
+  <div
+    v-if="randomness === IRONGOLF && !confirmation"
+    class="score-board"
+  >
+    <div class="score-board-title">
+      <div style="width: 159px;">
+        <div class="compressed">
+          PERSONAL BEST:
+        </div>
+      </div>
+      <span>
+        0
+      </span>
+      <button
+        class="clear-score"
+        @click="showConfirmation"
+      >
+        <svg
+          class="trash"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          viewBox="0 0 24 24"
+        >
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+        Clear PB
+      </button>
+    </div>
+    <div class="score-board-content">
+      <div>
+        <strong>Current:</strong>
+        0
+      </div>
+      <div>
+        <strong>Best possible:</strong>
+        0
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="confirmation"
+    class="confirmation score-board"
+  >
+    <div class="score-board-title compressed">
+      You sho 'bout dat?
+    </div>
+    <div class="confirmation-options score-board-content">
+      <button class="cancel" @click="confirmation = false">
+        nah, we good
+      </button>
+      <button class="confirm" @click="clearPersonalBest">
+        yes, delete my PB
+      </button>
+    </div>
   </div>
 
   <div
@@ -269,6 +323,7 @@ export default {
       randomness: NORMAL,
       fadeWhenIdle: false,
       fadeOut: false,
+      confirmation: false,
       lastMovement: new Date(),
       character: 'doc',
       skin: 1,
@@ -498,6 +553,17 @@ export default {
           this.fadeOut = false;
         }
       }, 1000);
+    },
+    showConfirmation: function () {
+      let file = '/fknrandom/_sound/you-sho-bout-dat.mp3';
+      let sound = new Audio(file);
+      sound.volume = this.volume / 100;
+      sound.play();
+      this.confirmation = true;
+    },
+    clearPersonalBest: function () {
+      this.confirmation = false;
+      console.log('STUB');
     },
     loadSettings: function () {
       const settings = JSON.parse(localStorage.getItem(APP_NAME));

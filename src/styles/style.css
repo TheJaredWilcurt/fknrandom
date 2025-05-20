@@ -358,7 +358,98 @@ h2 {
 .green-screen .golf-score {
   background: linear-gradient(#111, #111, #313A40, #414E57, #111);
 }
-
+.score-board {
+    max-width: 375px;
+    background: #958898;
+    border-radius: 10px;
+    margin: 20px auto 0px auto;
+    padding: 4px 3px 6px 3px;
+    font-family: Univers, sans-serif;
+    font-weight: 600;
+}
+.score-board strong {
+    font-weight: 700;
+}
+.score-board-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    color: #221924;
+    font-family: Univers, sans-serif;
+    font-size: 25px;
+    font-weight: 900;
+}
+.compressed {
+    transform: scaleX(75%) scaleY(105%);
+    transform-origin: left;
+    white-space: nowrap;
+}
+.trash {
+    width: 16px;
+    stroke-width: 0.7px;
+}
+.clear-score,
+.cancel,
+.confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: #F22A;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 4px 4px;
+    color: #221924;
+    font-family: Universe, sans-serif;
+    font-size: 13px;
+    font-weight: 100;
+    cursor: pointer;
+}
+.clear-score:hover,
+.cancel:hover,
+.confirm:hover {
+    background: #F22;
+    border: 1px solid currentColor;
+    font-weight: 400;
+}
+.clear-score:hover .trash {
+    stroke-width: 1.5px;
+}
+.score-board-content {
+    display: flex;
+    justify-content: space-evenly;
+    background: #221924;
+    border-radius: 8px;
+    padding: 10px;
+}
+.confirmation-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top: 7px;
+    padding-bottom: 6px;
+}
+.cancel,
+.confirm,
+.cancel:hover,
+.confirm:hover {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-weight: 700;
+}
+.cancel {
+    background: #FFFA;
+}
+.confirm {
+    background: #93719AAA;
+}
+.cancel:hover {
+    background: #DDD;
+}
+.confirm:hover {
+    background: #93719A;
+}
 
 .menu-item {
     position: relative;
