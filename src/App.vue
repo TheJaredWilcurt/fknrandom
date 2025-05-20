@@ -67,57 +67,59 @@
     </div>
     <div class="selected-card"></div>
   </div>
-  <div
-    v-if="ironMode"
-    class="ironman"
-    :class="{
-      'fade-in': !fadeOut,
-      'fade-out': fadeOut
-    }"
-  >
-    <TransitionGroup name="fade">
-      <div
-        v-for="(card, cardIndex) in usedIronmanCharacters"
-        :key="'card' + cardIndex"
-        class="mini-card"
-        :class="{
-          'golf': randomness === IRONGOLF,
-          'green-screen': ['blue', 'green'].includes(background)
-        }"
-      >
+  <BaseAccordion :show="showMiniCards" :speedMs="1000">
+    <div
+      v-if="ironMode"
+      class="ironman"
+      :class="{
+        'fade-in': !fadeOut,
+        'fade-out': fadeOut
+      }"
+    >
+      <TransitionGroup name="fade">
         <div
-          class="mini-character"
-          :style="[
-            'background-position:',
-            'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + ((card.skin * SPRITE_RATIO) * (3 * SPRITE_RATIO)) + 'px)',
-            'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
-          ].join(' ')"
+          v-for="(card, cardIndex) in usedIronmanCharacters"
+          :key="'card' + cardIndex"
+          class="mini-card"
+          :class="{
+            'golf': randomness === IRONGOLF,
+            'green-screen': ['blue', 'green'].includes(background)
+          }"
         >
-          <template v-if="randomness === IRONGOLF">
-            <button
-              class="increment"
-              @click="ironGolfScores[card.character]++"
-            >
-              Increment {{ card.character }} Score
-            </button>
-            <button
-              class="decrement"
-              :disabled="ironGolfScores[card.character] < 2"
-              @click="decrementScore(card.character)"
-            >
-              Increment {{ card.character }} Score
-            </button>
-          </template>
+          <div
+            class="mini-character"
+            :style="[
+              'background-position:',
+              'calc((var(--sprite-width) * -' + (card.skin - 1) + ') - ' + ((card.skin * SPRITE_RATIO) * (3 * SPRITE_RATIO)) + 'px)',
+              'calc((var(--sprite-height) * -' + card.index + ') - 1px)'
+            ].join(' ')"
+          >
+            <template v-if="randomness === IRONGOLF">
+              <button
+                class="increment"
+                @click="ironGolfScores[card.character]++"
+              >
+                Increment {{ card.character }} Score
+              </button>
+              <button
+                class="decrement"
+                :disabled="ironGolfScores[card.character] < 2"
+                @click="decrementScore(card.character)"
+              >
+                Increment {{ card.character }} Score
+              </button>
+            </template>
+          </div>
+          <div
+            v-if="randomness === IRONGOLF"
+            class="golf-score"
+          >
+            {{ ironGolfScores[card.character] }}
+          </div>
         </div>
-        <div
-          v-if="randomness === IRONGOLF"
-          class="golf-score"
-        >
-          {{ ironGolfScores[card.character] }}
-        </div>
-      </div>
-    </TransitionGroup>
-  </div>
+      </TransitionGroup>
+    </div>
+  </BaseAccordion>
 
   <div
     v-show="randomness === IRONGOLF && !confirmation"
@@ -285,6 +287,8 @@
 </template>
 
 <script>
+import confetti from 'canvas-confetti';
+
 import BackgroundStage from '@/components/BackgroundStage.vue';
 import BaseAccordion from '@/components/BaseAccordion.vue';
 import CornerImages from '@/components/CornerImages.vue';
@@ -332,6 +336,7 @@ export default {
     return {
       showRandomnessExplainer: false,
       showIdleExplainer: false,
+      showMiniCards: true,
       background: 'animated',
       showImages: true,
       randomness: NORMAL,
@@ -527,7 +532,10 @@ export default {
       ) {
         this.usedIronmanCharacters = [];
         this.resetGolfScores();
-        this.getRandomCharacters(16)
+        this.getRandomCharacters(16);
+        setTimeout(() => {
+          this.showMiniCards = false
+        }, 2000);
         return;
       }
       const randomSoundResponse = playRandomSound(this.volume, this.playedSoundsMap);
@@ -536,6 +544,9 @@ export default {
       this.spinLocation = this.spinLocation - 180;
       this.getRandomCharacters(8);
       this.markIronmanCharacterAsUsed();
+      setTimeout(() => {
+        this.showMiniCards = true;
+      }, 100);
     },
     updatePlayingSoundVolume: function (volume) {
       this.volume = volume;
@@ -552,15 +563,135 @@ export default {
       }
       if (
         this.personalBest === 0 ||
-        this.personalBest > this.currentScore
+        this.personalBest >= this.currentScore
       ) {
-        this.personalBest = this.currentScore;
         this.celebrateNewPersonalBest();
+        this.personalBest = this.currentScore;
         this.rollForCharacter();
       }
     },
-    celebrateNewPersonalBest: function () {
+    playCelebrationSound: function () {
+      if (this.unusedIronmanCharacters.length) {
+        return;
+      }
 
+      const perfectScore = 26;
+      const doublePerfect = perfectScore * 2;
+      const score = this.currentScore;
+      const pb = this.personalBest;
+      const newPB = (
+        pb === 0 ||
+        score < pb
+      );
+      let sounds = [];
+
+      if (score === perfectScore) {
+        sounds = ['wow-incredible'];
+      } else if (newPB && (score <= doublePerfect)) {
+        sounds = [
+          'congratulations',
+          'all-star',
+          'a-new-record'
+        ];
+      } else if (newPB) {
+        sounds = [
+          'a-new-record',
+          'success',
+          'complete',
+          'game'
+        ];
+      } else if (score > pb && pb !== 0) {
+        sounds = [
+          'no-contest',
+          'failure',
+          'game-set'
+        ];
+      }
+
+      const index = Math.floor(Math.random() * sounds.length);
+      const soundName = sounds[index];
+      const file = '/fknrandom/_sound/' + soundName + '.mp3';
+      let sound = new Audio(file);
+      sound.volume = this.volume / 100;
+      sound.play();
+    },
+    makeConfetti: function () {
+      if (
+        this.unusedIronmanCharacters.length ||
+        (
+          this.currentScore > this.personalBest &&
+          this.personalBest !== 0
+        )
+      ) {
+        return;
+      }
+      confetti.reset();
+      for (let i = 0; i < 3; i++) {
+        const smashBall = {
+          type: 'path',
+          path: 'M137,267c-7.5,0-14.848-0.644-22-1.863V180h144.71C241.957,230.663,193.726,267,137,267z M265.754,155\n  c0.814-5.885,1.246-11.892,1.246-18C267,65.203,208.797,7,137,7c-7.5,0-14.848,0.644-22,1.863V155H265.754z M7,137\n  c0,6.108,0.431,12.115,1.246,18H54V36.946C25.287,60.792,7,96.759,7,137z M54,237.054V180H14.29\n  C22.167,202.479,36.041,222.139,54,237.054z',
+          matrix: [
+            0.03875968992248062,
+            0,
+            0,
+            0.03875968992248062,
+            -5.310077519379845,
+            -5.310077519379845
+          ]
+        };
+
+        const triangle = {
+          type: 'path',
+          path: 'M0 10 L5 0 L10 10z',
+          matrix: [
+            1,
+            0,
+            0,
+            1,
+            -5,
+            -6
+          ]
+        };
+        setTimeout(() => {
+          confetti({
+            scalar: 2.5,
+            angle: -225 - (45 * i),
+            colors: [
+              // gold
+              '#F8E50C',
+              // mulled wine
+              '#5C4561',
+              // twitch purple
+              '#6441A5',
+              // twitch purple hover
+              '#906CD3',
+              // Volume hover
+              '#EDC53F',
+              // Score board
+              '#958898',
+              // Current Score
+              '#221924',
+              // Reset text
+              '#FF0000',
+              '#FFFFFF'
+            ],
+            shapes: [
+              smashBall,
+              smashBall,
+              smashBall,
+              smashBall,
+              smashBall,
+              smashBall,
+              smashBall,
+              triangle
+            ]
+          })
+        }, 200 * i);
+      }
+    },
+    celebrateNewPersonalBest: function () {
+      this.playCelebrationSound();
+      this.makeConfetti();
     },
     markIronmanCharacterAsUsed: function () {
       if (this.ironMode) {
