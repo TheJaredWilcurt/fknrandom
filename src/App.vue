@@ -561,14 +561,14 @@ export default {
       ) {
         return;
       }
+      this.celebrateNewPersonalBest();
       if (
         this.personalBest === 0 ||
         this.personalBest >= this.currentScore
       ) {
-        this.celebrateNewPersonalBest();
         this.personalBest = this.currentScore;
-        this.rollForCharacter();
       }
+      this.rollForCharacter();
     },
     playCelebrationSound: function () {
       if (this.unusedIronmanCharacters.length) {
