@@ -581,7 +581,7 @@ export default {
       const pb = this.personalBest;
       const newPB = (
         pb === 0 ||
-        score < pb
+        score <= pb
       );
       let sounds = [];
 
