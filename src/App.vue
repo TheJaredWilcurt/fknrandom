@@ -117,83 +117,128 @@
             {{ ironGolfScores[card.character] }}
           </div>
         </div>
+
+        <button
+          v-if="usedIronmanCharacters.length"
+          class="mini-card mini-card-reset"
+          :class="{
+            'golf': randomness === IRONGOLF,
+            'green-screen': ['blue', 'green'].includes(background)
+          }"
+          :style="usedIronmanCharacters.length === 26 ? 'display: none;' : ''"
+          title="Clear all played characters"
+          @click="resetIronMode(true)"
+        >
+          <div
+            class="mini-character"
+            style="gap: 3px;"
+          >
+            <svg
+              width="30"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+            >
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+            </svg>
+            <span>
+              Reset
+            </span>
+          </div>
+        </button>
+
       </TransitionGroup>
     </div>
   </BaseAccordion>
 
-  <div
-    v-show="randomness === IRONGOLF && !confirmation"
-    class="score-board"
-  >
-    <div class="score-board-title">
-      <div style="width: 159px;">
-        <div
-          class="compressed"
-          :style="personalBest === 26 ? 'color: var(--gold); text-shadow: 0px 0px 10px #EADE54;' : ''"
-        >
-          PERSONAL BEST:
+  <BaseAccordion :show="randomness === IRONGOLF" :speedMs="1000">
+    <div
+      v-show="!confirmation"
+      class="score-board"
+    >
+      <div class="score-board-title">
+        <div style="width: 159px;">
+          <div
+            class="compressed"
+            :style="personalBest === 26 ? 'color: var(--gold); text-shadow: 0px 0px 10px #EADE54;' : ''"
+          >
+            PERSONAL BEST:
+          </div>
         </div>
-      </div>
-      <span :class="{ perfection: personalBest === 26 }">
-        {{ personalBest }}
-      </span>
-      <button
-        class="clear-score"
-        @click="showConfirmation"
-      >
-        <svg
-          class="trash"
-          fill="none"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          viewBox="0 0 24 24"
-        >
-          <polyline points="3 6 5 6 21 6" />
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-        </svg>
-        Clear PB
-      </button>
-    </div>
-    <div class="score-board-content">
-      <div class="current-score">
-        <div>
-          <strong>Current:</strong>
-          {{ currentScore }}
-        </div>
+        <span :class="{ perfection: personalBest === 26 }">
+          {{ personalBest }}
+        </span>
         <button
-          :disabled="unusedIronmanCharacters.length"
-          class="confirm"
-          :class="{ 'submit-new-pb': (!unusedIronmanCharacters.length && (currentScore <= personalBest || personalBest === 0)) }"
-          :title="submitButtonMessage"
-          @click="setNewPersonalBest"
+          class="clear-score"
+          :title="'Delete Personal Best Score (' + personalBest + ')'"
+          @click="showConfirmation"
         >
-          Submit
+          <svg
+            class="trash"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            viewBox="0 0 24 24"
+          >
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+          Clear PB
         </button>
       </div>
-      <div class="best-possible">
-        <strong>Best possible:</strong>
-        <span>{{ bestPossibleScore }}</span>
+      <div class="score-board-content">
+        <div class="current-score">
+          <div>
+            <strong>Current:</strong>
+            {{ currentScore }}
+          </div>
+          <button
+            :disabled="unusedIronmanCharacters.length"
+            class="confirm"
+            :class="{
+              'submit-new-pb': (
+                !unusedIronmanCharacters.length &&
+                (
+                  currentScore <= personalBest ||
+                  personalBest === 0
+                )
+              )
+            }"
+            :title="submitButtonMessage"
+            @click="setNewPersonalBest"
+          >
+            Submit
+          </button>
+        </div>
+        <div class="best-possible">
+          <strong>Best possible:</strong>
+          <span>{{ bestPossibleScore }}</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div
-    v-show="confirmation"
-    class="confirmation score-board"
-  >
-    <div class="score-board-title compressed">
-      You sho 'bout dat?
+    <div
+      v-show="confirmation"
+      class="confirmation score-board"
+    >
+      <div class="score-board-title compressed">
+        You sho 'bout dat?
+      </div>
+      <div class="confirmation-options current-score">
+        <button class="cancel" @click="confirmation = false">
+          nah, we good
+        </button>
+        <button class="confirm" @click="clearPersonalBest">
+          yes, delete my PB
+        </button>
+      </div>
     </div>
-    <div class="confirmation-options current-score">
-      <button class="cancel" @click="confirmation = false">
-        nah, we good
-      </button>
-      <button class="confirm" @click="clearPersonalBest">
-        yes, delete my PB
-      </button>
-    </div>
-  </div>
+  </BaseAccordion>
 
   <div
     class="controls"
@@ -525,17 +570,27 @@ export default {
         this.ironGolfScores[character] = 1;
       }
     },
-    rollForCharacter: function () {
+    resetIronMode: function (force) {
       if (
-        !this.unusedIronmanCharacters.length &&
-        this.ironMode
+        force ||
+        (
+          !this.unusedIronmanCharacters.length &&
+          this.ironMode
+        )
       ) {
+        this.getRandomCharacters(8);
         this.usedIronmanCharacters = [];
+        this.spinLocation = this.spinLocation - 180;
         this.resetGolfScores();
-        this.getRandomCharacters(16);
         setTimeout(() => {
           this.showMiniCards = false
         }, 2000);
+        return true;
+      }
+    },
+    rollForCharacter: function () {
+      const wasReset = this.resetIronMode();
+      if (wasReset) {
         return;
       }
       const randomSoundResponse = playRandomSound(this.volume, this.playedSoundsMap);
@@ -829,6 +884,11 @@ export default {
   watch: {
     dataToSave: function (argument) {
       this.saveSettings();
+    },
+    randomness: function () {
+      setTimeout(() => {
+        this.confirmation = false;
+      }, 1000);
     }
   },
   created: function () {

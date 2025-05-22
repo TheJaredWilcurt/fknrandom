@@ -286,6 +286,16 @@ h2 {
 .mini-card.green-screen {
     background: linear-gradient(#111, #414E57, #111);
 }
+.mini-card-reset {
+    border: 0px;
+    color: currentColor;
+    font-family: Univers, sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+}
+.mini-card-reset:hover {
+    background: linear-gradient(#222, #5776, #222);
+}
 .mini-character {
     --sprite-width: 44px;
     --sprite-height: 63px;
