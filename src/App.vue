@@ -159,6 +159,10 @@
     <div
       v-show="!confirmation"
       class="score-board"
+      :class="{
+        'fade-in': !fadeOut,
+        'fade-out': fadeOut
+      }"
     >
       <div class="score-board-title">
         <div style="width: 159px;">
@@ -225,6 +229,10 @@
     <div
       v-show="confirmation"
       class="confirmation score-board"
+      :class="{
+        'fade-in': !fadeOut,
+        'fade-out': fadeOut
+      }"
     >
       <div class="score-board-title compressed">
         You sho 'bout dat?
