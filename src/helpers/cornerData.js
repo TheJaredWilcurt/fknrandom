@@ -1,5 +1,20 @@
 export const imageMap = Object.freeze([
   {
+    alt: 'Bobby Munchin',
+    src: 'bobby-munch.gif',
+    width: 139
+  },
+  {
+    alt: 'Bill on a journey',
+    src: 'bill-journey.gif',
+    width: 145
+  },
+  {
+    alt: 'Sakurai cries in regret',
+    src: 'sakurai-tears.gif',
+    width: 200
+  },
+  {
     alt: 'Samus drinking beer',
     src: 'beer.gif',
     width: 84
