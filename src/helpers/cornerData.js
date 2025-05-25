@@ -1,5 +1,25 @@
 export const imageMap = Object.freeze([
   {
+    alt: 'Samus drinking beer',
+    src: 'beer.gif',
+    width: 84
+  },
+  {
+    alt: 'Smooth dancer samus',
+    src: 'smooth-sammy.gif',
+    width: 200
+  },
+  {
+    alt: 'Popcorn Samus',
+    src: 'papcorm.gif',
+    width: 130
+  },
+  {
+    alt: 'Samus at the club',
+    src: 'sammy-at-the-club.gif',
+    width: 135
+  },
+  {
     alt: 'Bill... yep',
     src: 'bill-yep.webp',
     width: 190
