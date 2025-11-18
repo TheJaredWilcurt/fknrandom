@@ -9,15 +9,15 @@
     "preview": "npm run build && vite preview --port 4173"
   },
   "dependencies": {
-    "canvas-confetti": "^1.9.3",
+    "canvas-confetti": "^1.9.4",
     "normalize.css": "^8.0.1",
-    "vue": "^3.5.14",
+    "vue": "^3.5.24",
     "vue-options-api-constants-plugin": "^1.0.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.4",
-    "vite": "^6.3.5",
-    "vite-plugin-vue-devtools": "^7.7.6"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.2.2",
+    "vite-plugin-vue-devtools": "^8.0.5"
   },
   "repository": {
     "type": "git",
