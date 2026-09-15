@@ -274,7 +274,10 @@
           After a character is shown, they are removed from the deck until one character remains.
         </p>
         <p v-if="randomness === IRONGOLF">
-          Same as Ironman, except you can keep track of how many attempts it took on each character.
+          Play as the selected character until you win, then spin again.
+          Click the mini card to increase the count of attempts it took before winning.
+          Winning first try with every character will give a perfect score of 26.
+          Click "submit" to save your PB after a run.
         </p>
         <p v-if="randomness === LAWLESS">
           No rules, purely random, may have duplicates or pick the same character multiple times in a row.
