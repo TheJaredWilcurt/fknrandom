@@ -26,11 +26,32 @@
       <h1 class="title-text-color">RESET?</h1>
     </div>
   </div>
+
+  <div
+    v-if="ironMode"
+    class="carousel-reset"
+    :class="{
+      'fade-in': !usedIronmanCharacters.length,
+      'fade-out': usedIronmanCharacters.length
+    }"
+    role="button"
+    tabindex="0"
+    @click="rollForCharacter"
+    @keyup.enter="rollForCharacter"
+    @keydown.space.prevent="rollForCharacter"
+  >
+    <div class="text-overlap">
+      <h1 class="title-text-stroke">SPIN!</h1>
+      <h1 class="title-text-color">SPIN!</h1>
+    </div>
+  </div>
+
   <div
     class="carousel"
     :class="{
+      'semi-faded': ironMode && !usedIronmanCharacters.length,
       'fade-in': !fadeOut,
-      'fade-out': fadeOut || (!unusedIronmanCharacters.length && ironMode),
+      'fade-out': fadeOut || (!.length && ironMode),
       'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
     }"
     role="button"
@@ -202,11 +223,11 @@
             {{ currentScore }}
           </div>
           <button
-            :disabled="unusedIronmanCharacters.length"
+            :disabled=".length"
             class="confirm"
             :class="{
               'submit-new-pb': (
-                !unusedIronmanCharacters.length &&
+                !.length &&
                 (
                   currentScore <= personalBest ||
                   personalBest === 0
