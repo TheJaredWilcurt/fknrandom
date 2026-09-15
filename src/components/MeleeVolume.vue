@@ -43,7 +43,7 @@
       type="range"
       :value="modelValue"
       @input="emit($event.target.value)"
-    >
+    />
   </label>
 </template>
 

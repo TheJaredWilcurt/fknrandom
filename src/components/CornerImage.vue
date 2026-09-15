@@ -13,7 +13,7 @@
     @click="roll"
     @keyup.enter="roll"
     @keydown.space.prevent="roll"
-  >
+  />
 </template>
 <script>
 export default {
@@ -38,5 +38,5 @@ export default {
       this.$emit('click');
     }
   }
-}
+};
 </script>

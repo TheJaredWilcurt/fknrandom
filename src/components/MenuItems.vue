@@ -27,6 +27,7 @@
         v-for="(option, index) in options"
         :class="'menu-item-' + index"
         :style="'left: ' + (options.indexOf(modelValue) * -100) + 'px'"
+        :key="'option' + index"
       >
         {{ option.toUpperCase() }}
       </span>
@@ -40,9 +41,18 @@
 export default {
   name: 'MenuItems',
   props: {
-    options: Array,
-    modelValue: String,
-    volume: Number
+    options: {
+      type: Array,
+      default: undefined
+    },
+    modelValue: {
+      type: String,
+      default: undefined
+    },
+    volume: {
+      type: Number,
+      default: undefined
+    }
   },
   emits: ['update:modelValue'],
   data: function () {

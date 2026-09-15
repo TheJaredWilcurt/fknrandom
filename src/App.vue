@@ -51,7 +51,7 @@
     :class="{
       'semi-faded': ironMode && !usedIronmanCharacters.length,
       'fade-in': !fadeOut,
-      'fade-out': fadeOut || (!.length && ironMode),
+      'fade-out': fadeOut || (!unusedIronmanCharacters.length && ironMode),
       'green-screen': ['green', 'blue', 'purple', 'black'].includes(background)
     }"
     role="button"
@@ -100,12 +100,12 @@
       <TransitionGroup name="fade">
         <div
           v-for="(card, cardIndex) in usedIronmanCharacters"
-          :key="'card' + cardIndex"
           class="mini-card"
           :class="{
             'golf': randomness === IRONGOLF,
             'green-screen': ['blue', 'green'].includes(background)
           }"
+          :key="'card' + cardIndex"
         >
           <div
             class="mini-character"
@@ -223,11 +223,11 @@
             {{ currentScore }}
           </div>
           <button
-            :disabled=".length"
+            :disabled="unusedIronmanCharacters.length"
             class="confirm"
             :class="{
               'submit-new-pb': (
-                !.length &&
+                !unusedIronmanCharacters.length &&
                 (
                   currentScore <= personalBest ||
                   personalBest === 0
@@ -348,7 +348,7 @@
 
     <MeleeVolume
       :modelValue="volume"
-      @update:modelValue="updatePlayingSoundVolume"
+      @update:model-value="updatePlayingSoundVolume"
     />
   </div>
 
@@ -381,7 +381,7 @@ const APP_NAME = 'fknrandom';
 const NORMAL = 'normal';
 const CLASSIC = 'classic';
 const LAWLESS = 'lawless';
-const IRONGOLF = 'irongolf'
+const IRONGOLF = 'irongolf';
 const IRONMAN = 'ironman';
 const ALLOWED_RANDOMNESS = [
   NORMAL,
@@ -426,60 +426,60 @@ export default {
       volume: 25,
       currentSound: null,
       characters: {
-        'doc': 5,
-        'mario': 5,
-        'luigi': 4,
-        'bowser': 4,
-        'peach': 5,
-        'yoshi': 6,
-        'dk': 5,
-        'falcon': 6,
-        'gannon': 5,
-        'falco': 4,
-        'fox': 4,
-        'ness': 4,
-        'icies': 4,
-        'kirby': 6,
-        'samus': 5,
-        'zelda': 5,
-        'link': 5,
+        doc: 5,
+        mario: 5,
+        luigi: 4,
+        bowser: 4,
+        peach: 5,
+        yoshi: 6,
+        dk: 5,
+        falcon: 6,
+        gannon: 5,
+        falco: 4,
+        fox: 4,
+        ness: 4,
+        icies: 4,
+        kirby: 6,
+        samus: 5,
+        zelda: 5,
+        link: 5,
         'young-link': 5,
-        'pichu': 4,
-        'pikachu': 4,
-        'puff': 5,
-        'mewtwo': 4,
+        pichu: 4,
+        pikachu: 4,
+        puff: 5,
+        mewtwo: 4,
         'game-and-watch': 4,
-        'marth': 5,
-        'roy': 5,
-        'sheik': 5
+        marth: 5,
+        roy: 5,
+        sheik: 5
       },
       ironGolfScores: {
-        'doc': 1,
-        'mario': 1,
-        'luigi': 1,
-        'bowser': 1,
-        'peach': 1,
-        'yoshi': 1,
-        'dk': 1,
-        'falcon': 1,
-        'gannon': 1,
-        'falco': 1,
-        'fox': 1,
-        'ness': 1,
-        'icies': 1,
-        'kirby': 1,
-        'samus': 1,
-        'zelda': 1,
-        'link': 1,
+        doc: 1,
+        mario: 1,
+        luigi: 1,
+        bowser: 1,
+        peach: 1,
+        yoshi: 1,
+        dk: 1,
+        falcon: 1,
+        gannon: 1,
+        falco: 1,
+        fox: 1,
+        ness: 1,
+        icies: 1,
+        kirby: 1,
+        samus: 1,
+        zelda: 1,
+        link: 1,
         'young-link': 1,
-        'pichu': 1,
-        'pikachu': 1,
-        'puff': 1,
-        'mewtwo': 1,
+        pichu: 1,
+        pikachu: 1,
+        puff: 1,
+        mewtwo: 1,
         'game-and-watch': 1,
-        'marth': 1,
-        'roy': 1,
-        'sheik': 1
+        marth: 1,
+        roy: 1,
+        sheik: 1
       },
       personalBest: 0,
       usedIronmanCharacters: [],
@@ -581,7 +581,7 @@ export default {
         }
       } else {
         // remove the front half of the array
-        this.randomCards = this.randomCards.slice(amount)
+        this.randomCards = this.randomCards.slice(amount);
         for (let i = 0; i < amount; i++) {
           this.getRandomCharacter();
           this.randomCards.unshift({
@@ -615,7 +615,7 @@ export default {
         this.spinLocation = this.spinLocation - 180;
         this.resetGolfScores();
         setTimeout(() => {
-          this.showMiniCards = false
+          this.showMiniCards = false;
         }, 2000);
         return true;
       }
@@ -772,7 +772,7 @@ export default {
               smashBall,
               triangle
             ]
-          })
+          });
         }, 200 * i);
       }
     },
@@ -883,7 +883,7 @@ export default {
     },
     submitButtonMessage: function () {
       if (this.unusedIronmanCharacters.length) {
-        return 'You cannot submit until you\'ve won with each character.'
+        return 'You cannot submit until you\'ve won with each character.';
       } else if ((this.currentScore > this.personalBest) && this.personalBest > 0) {
         return 'Your new score must be lower than your Personal Best to submit it.';
       }
@@ -891,7 +891,7 @@ export default {
     },
     currentCard: function () {
       if (this.front) {
-        return this.randomCards[11]
+        return this.randomCards[11];
       }
       return this.randomCards[3];
     },
@@ -914,7 +914,7 @@ export default {
     }
   },
   watch: {
-    dataToSave: function (argument) {
+    dataToSave: function () {
       this.saveSettings();
     },
     randomness: function () {

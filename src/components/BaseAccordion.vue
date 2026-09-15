@@ -40,5 +40,5 @@ export default {
       ].join(';');
     }
   }
-}
+};
 </script>

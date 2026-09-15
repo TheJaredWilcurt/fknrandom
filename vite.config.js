@@ -7,13 +7,35 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 export default defineConfig({
   base: '/fknrandom',
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          'canvas-confetti': ['canvas-confetti'],
-          'normalize.css': ['normalize.css'],
-          vue: ['vue'],
-          'vue-options-api-constants-plugin': ['vue-options-api-constants-plugin']
+        codeSplitting: {
+          groups: [
+            {
+              test: /node_modules\/canvas-confetti/,
+              name: 'canvas-confetti'
+            },
+            {
+              test: /node_modules\/normalize.css/,
+              name: 'normalize'
+            },
+            {
+              test: /node_modules\/vue-options-api-constants-plugin/,
+              name: 'vue-options-api-constants-plugin'
+            },
+            {
+              test: /node_modules\/vue/,
+              name: 'vue'
+            },
+            {
+              test: /node_modules/,
+              name: 'lib'
+            },
+            {
+              test: /index\.js/,
+              name: 'index'
+            }
+          ]
         }
       }
     },

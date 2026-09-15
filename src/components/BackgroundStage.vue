@@ -9,14 +9,14 @@
     <source
       src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.mp4"
       type="video/mp4"
-    >
+    />
   </video>
   <img
     v-else-if="background === 'still'"
     alt="background image"
     class="bg-vid"
     src="https://TheJaredWilcurt.com/melee-all-trophies-tracker/images/main.jpg"
-  >
+  />
   <div
     class="bg-blue"
     :class="{ hide: background !== 'blue' }"
