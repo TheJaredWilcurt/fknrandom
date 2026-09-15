@@ -1,6 +1,9 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
+env:
+  PROTO_TELEMETRY: false
+
 on:
   # Runs on pushes targeting the default branch
   push:
@@ -29,19 +32,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: volta-cli/action@v4
+        uses: actions/checkout@v7
+      - name: Set up Proto
+        uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - name: Verify Node
+        run: node -v && npm -v
       - name: Install dependencies
         run: npm ci
       - name: Build
         run: npm run build
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: './dist'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
