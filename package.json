@@ -13,19 +13,19 @@
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "normalize.css": "^8.0.1",
-    "vue": "^3.5.42",
+    "vue": "^3.5.43",
     "vue-options-api-constants-plugin": "^1.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@vitejs/plugin-vue": "^6.0.9",
-    "eslint": "^10.10.0",
+    "eslint": "^10.11.0",
     "eslint-config-tjw-base": "^5.0.0",
     "eslint-config-tjw-vue": "^4.0.1",
-    "eslint-plugin-vue": "^10.11.0",
+    "eslint-plugin-vue": "^10.11.1",
     "globals": "^17.12.0",
-    "vite": "^8.3.0",
+    "vite": "^8.3.1",
     "vite-plugin-vue-devtools": "^8.2.1"
   },
   "repository": {
@@ -41,11 +41,11 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "26.8.2"
+      "version": "26.10.0"
     },
     "packageManager": {
       "name": "npm",
-      "version": "12.0.2"
+      "version": "12.2.0"
     }
   }
 }
