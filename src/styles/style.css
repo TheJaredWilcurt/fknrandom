@@ -169,6 +169,12 @@ h2 {
     -webkit-text-stroke: 3px rgba(255, 255, 255, 0.9);
     -webkit-text-fill-color: #FFF;
 }
+.title-top span {
+    letter-spacing: -2px;
+}
+.title-bottom span {
+    letter-spacing: -4px;
+}
 
 .tweetch {
     display: block;

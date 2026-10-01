@@ -3,8 +3,8 @@
     :background="background"
   />
   <MeleeTitle
-    topText="fknsilver's random"
-    bottomText="character select"
+    topText="fknsi<span>l</span>ver's random"
+    bottomText="cha<span>r</span>acter select"
     :class="fadeOut ? 'fade-out' : 'fade-in'"
   />
 

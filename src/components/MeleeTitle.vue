@@ -11,12 +11,12 @@
       />
     </svg>
     <div class="text-overlap">
-      <h1 class="title-text-stroke">{{ topText }}</h1>
-      <h1 class="title-text-color">{{ topText }}</h1>
+      <h1 v-html="topText" class="title-top title-text-stroke"></h1>
+      <h1 v-html="topText" class="title-top title-text-color"></h1>
     </div>
     <div class="text-overlap">
-      <h2 class="title-text-stroke">{{ bottomText }}</h2>
-      <h2 class="title-text-color">{{ bottomText }}</h2>
+      <h2 v-html="bottomText" class="title-bottom title-text-stroke"></h2>
+      <h2 v-html="bottomText" class="title-bottom title-text-color"></h2>
     </div>
   </div>
 </template>
